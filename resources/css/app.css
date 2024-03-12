@@ -6,3 +6,230 @@
     width: 50%;
     height: 50%;
 }
+
+::before,
+::after {
+    box-sizing: border-box;
+}
+
+.header-bg-color {
+    background-color: #080823;
+}
+
+.body-bg-color {
+    background-color: #111129;
+    color: white;
+}
+
+.header-border-bottom {
+    position: relative;
+}
+
+.header-border-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    /* Adjust the height of the border as needed */
+    background: linear-gradient(
+        to left,
+        transparent 0%,
+        #383852 50%,
+        transparent 100%
+    );
+}
+
+.header-middle-bg-color {
+    background-color: #1e1e36;
+}
+
+.header-svg-bg-gradient {
+    background-image: linear-gradient(
+        to right,
+        rgb(158, 84, 255),
+        rgb(255, 150, 220),
+        rgb(255, 193, 136)
+    );
+    transition: background-position 0.5s;
+    background-size: 200% auto;
+}
+
+a:hover {
+    .header-svg-bg-gradient {
+        background-position: 100% 0;
+    }
+}
+
+.login-bg-gradient {
+    background-image: linear-gradient(135deg, #6352ec, #c46ac2);
+    box-shadow: 5px 0 30px rgba(0, 0, 0, 0.35);
+}
+
+.input {
+    background-color: #e2e0ff !important;
+    height: 2.75rem;
+    padding-left: 1rem;
+    transition: box-shadow 0.35s ease-in-out;
+}
+
+.input:focus {
+    outline: none;
+    background-color: #cecbff !important;
+    box-shadow: 8px -10px 2px #e2e0ff;
+}
+
+.input:hover {
+    background-color: #cecbff !important;
+}
+
+.email {
+    background: url("../Images/email-svgrepo-com.svg") no-repeat left 12px
+        center;
+    background-size: 20px;
+    padding-left: 2.5rem;
+}
+
+.password {
+    background: url("../Images/lock-keyhole-svgrepo-com.svg") no-repeat left
+        12px center;
+    background-size: 20px;
+    padding-left: 2.5rem;
+}
+
+.auth-width {
+    width: auto;
+}
+
+.login-btn-bg-gradient:hover {
+    background-position: 100% 0;
+}
+
+.height {
+    height: 80vh;
+}
+
+.checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 26px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.container input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #e2e0ff;
+}
+
+.checkbox-container:hover input[type="checkbox"] ~ .checkmark {
+    background-color: #cecbff;
+}
+
+.checkbox-container input[type="checkbox"]:checked ~ .checkmark {
+    background-color: #cecbff;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.container input[type="checkbox"]:checked ~ .checkmark:after {
+    display: block;
+}
+
+.container .checkmark:after {
+    left: 6px;
+    top: 1px;
+    width: 8px;
+    height: 15px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.fill {
+    width: -moz-available;
+    /* WebKit-based browsers will ignore this. */
+    width: -webkit-fill-available;
+    /* Mozilla-based browsers will ignore this. */
+}
+
+.x-sign::before {
+    content: "\2716";
+    color: transparent;
+    text-shadow: 0 0 0 red;
+    margin: 2px 5px;
+    font-size: 14px;
+}
+
+.ok-sign {
+    display: inline-block;
+    margin: 0 7px;
+    width: 15.2px;
+    height: 11px;
+    border: 4px solid rgb(0, 199, 0);
+    border-top: none;
+    border-right: none;
+    transform: rotate(-45deg);
+}
+
+.slidedown-h {
+    height: 40%;
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+@media (min-width: 640px) {
+    .input:focus {
+        box-shadow: 15px -10px 2px #e2e0ff;
+    }
+
+    .email,
+    .password {
+        background-position: 15px;
+        background-size: 25px;
+        padding-left: 3rem;
+    }
+
+    .auth-width {
+        width: 500px;
+    }
+
+    .checkmark {
+        height: 25px;
+        width: 25px;
+    }
+
+    .container .checkmark:after {
+        left: 9px;
+        top: 3px;
+    }
+
+    .checkbox-container {
+        padding-left: 35px;
+    }
+}

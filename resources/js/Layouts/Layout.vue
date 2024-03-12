@@ -22,6 +22,8 @@ watch(() => showAlert, (newShowAlert) => {
         showAlert.value = true;
     }
 });
+
+
 </script>
 <template>
     <Header v-if="$page.props.auth.user"></Header>
