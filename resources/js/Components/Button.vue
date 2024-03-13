@@ -19,22 +19,26 @@ const props = defineProps({
         },
         default: "secondary",
     },
-})
+    customClasses: {
+        type: String,
+        default: "",
+    }
+});
 
 const buttonClass = computed(() => {
-    return cva("inline-flex items-center justify-center text-sm min-h-[32px] px-3 py-0.5 font-semibold", {
+    return cva("inline-flex items-center justify-center text-sm min-h-[32px] px-3 py-1 font-semibold", {
         variants: {
             intent: {
-                primary: "bg-black text-white hover:bg-gray-800",
+                primary: "bg-khaki text-white",
                 secondary: "bg-black/5 hover:bg-black/10 text-gray-700",
                 danger: "bg-red-600 text-white hover:bg-red-500",
                 text: "text-gray-700 hover:bg-black/5",
-            }
-        }
+            },
+        },
     })({
         intent: props.intent,
-    })
-})
+    });
+});
 
 //Add loading indicator and disabled class
 function disable(e) {
@@ -47,7 +51,7 @@ function disable(e) {
 </script>
 <template>
     <component :is="props.as"
-               :class="[buttonClass, localDisabled && 'disabled']"
+               :class="[buttonClass, props.customClasses, localDisabled && 'disabled']"
                @click="disable">
         <svg v-if="props.loading || localDisabled"
              class="animate-spin h-5 w-5 absolute"

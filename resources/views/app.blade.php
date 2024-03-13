@@ -12,7 +12,7 @@
     @inertiaHead
 </head>
 
-<body class="antialiased bg-slate-900">
+<body class="bg-emerald-50 text-white">
     @inertia
 </body>
 @vite('resources/js/app.js')

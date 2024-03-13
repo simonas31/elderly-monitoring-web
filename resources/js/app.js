@@ -11,9 +11,9 @@ createInertiaApp({
     },
     setup({ el, App, props, plugin }) {
         const VueApp = createApp({ render: () => h(App, props) });
-
+        console.log(el);
         // VueApp.use(plugin).mixin(titleMixin).mount(el);
-        VueApp.use(plugin).mount(el);
+        VueApp.use(plugin).mount("#app");
     },
 });
 

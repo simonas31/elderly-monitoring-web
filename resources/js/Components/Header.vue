@@ -1,6 +1,7 @@
 <script setup>
 import { Link, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
+import { ComputerDesktopIcon } from "@heroicons/vue/16/solid";
 
 const form = useForm({});
 
@@ -25,48 +26,20 @@ function slideDown() {
     <header class="grid grid-cols-2 sm:grid-cols-3 items-center h-20 header-bg-color header-border-bottom">
         <Link href="/"
               class="flex sm:space-x-2 mx-auto items-center">
-        <svg width="41"
-             height="41"
-             class="border rounded-xl header-svg-bg-gradient scale-75 sm:scale-100">
-            <line x1="11"
-                  y1="15"
-                  x2="20"
-                  y2="20"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                  stroke="white" />
-            <line x1="29"
-                  y1="15"
-                  x2="20"
-                  y2="20"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                  stroke="white" />
-            <line x1="20"
-                  y1="29"
-                  x2="20"
-                  y2="20"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                  stroke="white" />
-            <polygon points="7,13 20,6 33,13 33,26 20,33 7,26"
-                     fill="none"
-                     stroke="white"
-                     stroke-width="2"
-                     stroke-linecap="round"
-                     stroke-linejoin="round" />
-        </svg>
-        <span>StorageIO</span>
+        <span class="border rounded-xl header-svg-bg-gradient font-semibold sm:scale-100 w-9 h-9">
+            <ComputerDesktopIcon />
+        </span>
+        <span class="text-lg font-semibold">EMS</span>
         </Link>
         <div class="mx-auto hidden sm:flex">
-            <div class="border border-slate-600 rounded-l-full rounded-r-full inline-flex header-middle-bg-color">
+            <div class="border border-white rounded-l-full rounded-r-full inline-flex header-middle-bg-color">
                 <div class="flex justify-between my-2 px-5 space-x-4">
                     <Link href="/profile">Profile</Link>
                 </div>
             </div>
         </div>
         <div class="hidden sm:flex space-x-2 mx-auto">
-            <div>Logged in as: {{ $page.props.auth.user.username }}</div>
+            <div>Logged in as: </div>
             <button class="border rounded-xl px-2 pb-0.5 login-btn-bg-gradient text-md"
                     @click="logout">Logout</button>
         </div>
