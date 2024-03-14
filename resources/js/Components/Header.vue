@@ -25,7 +25,7 @@ function slideDown() {
 <template>
     <header class="grid grid-cols-2 sm:grid-cols-3 items-center h-20 header-bg-color header-border-bottom">
         <Link href="/"
-              class="flex sm:space-x-2 mx-auto items-center">
+              class="flex space-x-2 mx-auto items-center">
         <span class="border rounded-xl header-svg-bg-gradient font-semibold sm:scale-100 w-9 h-9">
             <ComputerDesktopIcon />
         </span>

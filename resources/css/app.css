@@ -79,10 +79,6 @@ a:hover {
     background-color: #cecbff !important;
 }
 
-.auth-width {
-    width: auto;
-}
-
 .login-btn-bg-gradient:hover {
     background-position: 100% 0;
 }
@@ -207,6 +203,64 @@ a:hover {
     background-color: rgb(236 253 245 / var(--tw-bg-opacity));
 }
 
+#signUpForm .form-header .stepIndicator.active {
+    font-weight: 700 !important;
+}
+
+#signUpForm .form-header .stepIndicator::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    z-index: 9;
+    width: 20px;
+    height: 20px;
+    background-color: #77df00;
+    border-radius: 50%;
+    border: 3px solid #cefa9b;
+}
+
+#signUpForm .form-header .stepIndicator.active::before {
+    background-color: #77df00;
+    border: 3px solid #cefa9b;
+}
+
+#signUpForm .form-header .stepIndicator.finish::before {
+    background-color: #77df00;
+    border: 3px solid #cefa9b;
+}
+
+#signUpForm .form-header .stepIndicator::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    width: 100%;
+    height: 3px;
+    background-color: #f3f3f3;
+}
+
+#signUpForm .form-header .stepIndicator.active::after {
+    background-color: #c6faa3;
+}
+
+#signUpForm .form-header .stepIndicator.finish::after {
+    background-color: #77df00;
+}
+
+#signUpForm .form-header .stepIndicator:last-child:after {
+    display: none;
+}
+
+#signUpForm input.invalid {
+    border: 2px solid #ffaba5;
+}
+
+#signUpForm .step {
+    display: none;
+}
+
 @media (min-width: 640px) {
     .input:focus {
         box-shadow: 15px -10px 2px #e2e0ff;
@@ -217,10 +271,6 @@ a:hover {
         background-position: 15px;
         background-size: 25px;
         padding-left: 3rem;
-    }
-
-    .auth-width {
-        width: 500px;
     }
 
     .checkmark {

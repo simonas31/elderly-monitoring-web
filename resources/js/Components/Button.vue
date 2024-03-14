@@ -2,8 +2,6 @@
 import { cva } from "class-variance-authority";
 import { ref, computed } from "vue";
 
-const localDisabled = ref(false);
-
 const props = defineProps({
     leftIcon: Function,
     rightIcon: Function,
@@ -42,18 +40,17 @@ const buttonClass = computed(() => {
 
 //Add loading indicator and disabled class
 function disable(e) {
-    if (!localDisabled.value) {
-        localDisabled.value = true;
-    } else {
-        e.preventDefault();
-    }
+    // if (!localDisabled.value) {
+    //     localDisabled.value = true;
+    // } else {
+    //     e.preventDefault();
+    // }
 }
 </script>
 <template>
     <component :is="props.as"
-               :class="[buttonClass, props.customClasses, localDisabled && 'disabled']"
-               @click="disable">
-        <svg v-if="props.loading || localDisabled"
+               :class="[buttonClass, props.customClasses, props.loading && 'disabled']">
+        <svg v-if="props.loading"
              class="animate-spin h-5 w-5 absolute"
              xmlns="http://www.w3.org/2000/svg"
              fill="none"
@@ -71,13 +68,13 @@ function disable(e) {
         </svg>
 
         <component :is="props.leftIcon"
-                   :class="['w-5 h-5 mr-2', localDisabled && 'invisible']" />
+                   :class="['w-5 h-5 mr-2', props.loading && 'invisible']" />
 
-        <span :class="[localDisabled && 'invisible']">
+        <span :class="[props.loading && 'invisible']">
             <slot />
         </span>
 
         <component :is="props.rightIcon"
-                   :class="['w-5 h-5 ml-2', localDisabled && 'invisible']" />
+                   :class="['w-5 h-5 ml-2', props.loading && 'invisible']" />
     </component>
 </template>

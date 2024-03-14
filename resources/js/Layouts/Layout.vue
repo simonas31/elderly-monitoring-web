@@ -32,7 +32,7 @@ watch(() => showAlert, (newShowAlert) => {
                :show="showAlert"
                :intent="$page.props.flash.type"
                :on-dismiss="() => (showAlert = false)">{{ $page.props.flash.message }}</Alert>
-        <main class="flex-grow sm:m-auto text-black">
+        <main class="flex-grow text-black">
             <slot></slot>
         </main>
         <Footer></Footer>
