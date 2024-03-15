@@ -206,60 +206,43 @@ onMounted(() => {
                             <h1 class="text-2xl sm:text-3xl text-center mb-7">Step 1: Personal Information</h1>
                             <div class="flex flex-col mx-auto space-y-6 w-4/5">
                                 <div class="relative">
-                                    <input autocomplete="off"
+                                    <Input autocomplete="off"
                                            id="firstname"
                                            name="firstname"
                                            type="text"
-                                           class="pl-2 peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
                                            placeholder="First Name" />
-                                    <label for="firstname"
-                                           class="absolute left-2 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-5 peer-focus:text-gray-600 peer-focus:text-sm">First
-                                        Name</label>
                                 </div>
                                 <div class="relative">
-                                    <input autocomplete="off"
+                                    <Input autocomplete="off"
                                            id="lastname"
                                            name="lastname"
                                            type="text"
-                                           class="pl-2 peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
                                            placeholder="Last Name" />
-                                    <label for="lastname"
-                                           class="absolute left-2 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-5 peer-focus:text-gray-600 peer-focus:text-sm">Last
-                                        Name</label>
                                 </div>
 
                                 <div class="grid grid-cols-3 space-x-5">
                                     <div class="relative">
-                                        <input autocomplete="off"
+                                        <Input autocomplete="off"
                                                id="month"
                                                name="month"
                                                type="text"
-                                               class="pl-2 peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
                                                placeholder="Month" />
-                                        <label for="month"
-                                               class="absolute left-2 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-5 peer-focus:text-gray-600 peer-focus:text-sm">Month</label>
                                     </div>
 
                                     <div class="relative">
-                                        <input autocomplete="off"
+                                        <Input autocomplete="off"
                                                id="day"
                                                name="day"
                                                type="text"
-                                               class="pl-2 peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
                                                placeholder="Day" />
-                                        <label for="day"
-                                               class="absolute left-2 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-5 peer-focus:text-gray-600 peer-focus:text-sm">Day</label>
                                     </div>
 
                                     <div class="relative">
-                                        <input autocomplete="off"
+                                        <Input autocomplete="off"
                                                id="year"
                                                name="year"
                                                type="text"
-                                               class="pl-2 peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
                                                placeholder="Year" />
-                                        <label for="year"
-                                               class="absolute left-2 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-5 peer-focus:text-gray-600 peer-focus:text-sm">Year</label>
                                     </div>
                                 </div>
                                 <div class="ml-auto">
@@ -326,8 +309,9 @@ onMounted(() => {
 <script>
 import Layout from "@Layouts/Layout.vue";
 import Button from "@Components/Button.vue";
+import Input from "@Components/Input.vue";
 
 export default {
-    components: { Layout, Button },
+    components: { Layout, Button, Input },
 };
 </script>

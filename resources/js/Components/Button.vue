@@ -1,6 +1,6 @@
 <script setup>
 import { cva } from "class-variance-authority";
-import { ref, computed } from "vue";
+import { computed } from "vue";
 
 const props = defineProps({
     leftIcon: Function,
