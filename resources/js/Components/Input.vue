@@ -2,6 +2,7 @@
 import { cva } from "class-variance-authority";
 import { computed } from "vue";
 
+const model = defineModel()
 const props = defineProps({
     id: String,
     name: String,
@@ -22,10 +23,11 @@ const inputClass = computed(() => {
     return cva("", {
         variants: {
             type: {
-                text: "pl-2 peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-emerald-500",
+                text: "pl-2 peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 focus:outline-none focus:border-primary-600",
+                password: "pl-2 peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 focus:outline-none focus:border-primary-600",
                 file: "",
                 number: "",
-                date: ""
+                date: "p-2 peer h-10 w-full border-b-2 border-gray-300 focus:outline-none focus:border-primary-600",
             }
         }
     })({
@@ -37,10 +39,11 @@ const labelClass = computed(() => {
     return cva("", {
         variants: {
             type: {
-                text: "absolute left-2 -top-4 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-4 peer-focus:text-gray-600 peer-focus:text-sm",
+                text: "absolute left-2 -top-4 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-2 transition-all peer-focus:-top-4 peer-focus:text-sm",
+                password: "absolute left-2 -top-4 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-2 transition-all peer-focus:-top-4 peer-focus:text-sm",
                 file: "",
                 number: "",
-                date: ""
+                date: "absolute left-2 -top-4 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-2 transition-all peer-focus:-top-4 peer-focus:text-sm"
             }
         }
     })({
@@ -55,7 +58,8 @@ const labelClass = computed(() => {
            :name="props.name"
            :type="props.type"
            :class="[inputClass, props.customClasses]"
-           :placeholder="props.placeholder" />
+           :placeholder="props.placeholder"
+           v-model="model" />
     <label :for="props.name"
            :class="labelClass">
         <slot />

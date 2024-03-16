@@ -24,7 +24,7 @@ const props = defineProps({
 });
 
 const buttonClass = computed(() => {
-    return cva("inline-flex items-center justify-center text-sm min-h-[32px] px-3 py-1 font-semibold", {
+    return cva("transition-all inline-flex items-center justify-center text-sm min-h-[32px] px-3 py-1 font-semibold", {
         variants: {
             intent: {
                 primary: "bg-khaki text-white",
@@ -49,7 +49,8 @@ function disable(e) {
 </script>
 <template>
     <component :is="props.as"
-               :class="[buttonClass, props.customClasses, props.loading && 'disabled']">
+               :class="[buttonClass, props.customClasses, props.loading && 'disabled']"
+               type="button">
         <svg v-if="props.loading"
              class="animate-spin h-5 w-5 absolute"
              xmlns="http://www.w3.org/2000/svg"

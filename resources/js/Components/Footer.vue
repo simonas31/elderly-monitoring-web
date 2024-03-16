@@ -1,9 +1,9 @@
 <template>
-    <footer class="p-4 mt-10 sm:mt-0 bg-black md:p-8 lg:p-10">
+    <footer class="p-4 mt-10 sm:mt-0 md:p-8 lg:p-10 bg-text-200">
         <div class="mx-auto max-w-screen-xl text-center">
-            <span class="text-sm text-gray-500 sm:text-center">
+            <span>
                 {{ new Date().getFullYear() }}
-                <b>"Elderly Monitoring System".</b>
+                <b>"Elder Watch".</b>
             </span>
         </div>
     </footer>
