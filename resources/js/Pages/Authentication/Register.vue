@@ -45,12 +45,13 @@ const isDropping = ref(false);
 const dropped = ref(false);
 const imageUrl = ref(null);
 const currentStep = ref(0);
+const requirementsMet = ref(false);
 
 const register = async (e) => {
     if (!validateForm()) {
         return false;
     }
-    console.log(form);
+
     form.post('/register', {
         headers: {
             'Content-Type': 'multipart/form-data',
@@ -62,12 +63,14 @@ const register = async (e) => {
 };
 
 watch(() => form.password, (newPassword) => {
+    requirementsMet.value = true;
     if (newPassword.length >= 8) {
         document.querySelector(".atleast").classList.remove("x-sign");
         document.querySelector(".atleast").classList.add("ok-sign");
     } else {
         document.querySelector(".atleast").classList.remove("ok-sign");
         document.querySelector(".atleast").classList.add("x-sign");
+        requirementsMet.value = false;
     }
 
     if (/[A-Z]/.test(newPassword)) {
@@ -76,6 +79,7 @@ watch(() => form.password, (newPassword) => {
     } else {
         document.querySelector(".upper").classList.remove("ok-sign");
         document.querySelector(".upper").classList.add("x-sign");
+        requirementsMet.value = false;
     }
 
     if (/[a-z]/.test(newPassword)) {
@@ -84,6 +88,7 @@ watch(() => form.password, (newPassword) => {
     } else {
         document.querySelector(".lower").classList.remove("ok-sign");
         document.querySelector(".lower").classList.add("x-sign");
+        requirementsMet.value = false;
     }
 
     if (/[0-9]/.test(newPassword)) {
@@ -92,14 +97,7 @@ watch(() => form.password, (newPassword) => {
     } else {
         document.querySelector(".number").classList.remove("ok-sign");
         document.querySelector(".number").classList.add("x-sign");
-    }
-});
-
-watch(confirmPassword, () => {
-    if (form.password !== confirmPassword.value) {
-        document.getElementById("passwordsDontMatch").classList.remove("hidden");
-    } else {
-        document.getElementById("passwordsDontMatch").classList.add("hidden");
+        requirementsMet.value = false;
     }
 });
 
@@ -175,12 +173,12 @@ function validateForm() {
     let select = x[currentTab].getElementsByTagName("select");
     let selectLabel = x[currentTab].getElementsByClassName("selectLabel");
     if (select.length > 0 && form.security_type == null) {
-        errors[currentTab][select[0].name].value = "Security type is required";
+        errors[currentStep.value][select[0].name].value = "Security type is required";
         valid = false;
         selectLabel[0].classList.add("before:border-rose-300", "after:border-rose-300");
         select[0].classList.add("border-rose-300");
     } else if (select.length > 0 && form.security_type != null) {
-        errors[currentTab][select[0].name].value = null;
+        errors[currentStep.value][select[0].name].value = null;
         selectLabel[0].classList.add("before:border-primary-600", "after:border-primary-600");
         select[0].classList.remove("border-rose-300");
         select[0].classList.add("border-primary-600");
@@ -198,8 +196,8 @@ function validateForm() {
         }
     }
 
-    if (valid && !document.getElementsByClassName("stepIndicator")[currentTab].classList.contains("finish")) {
-        document.getElementsByClassName("stepIndicator")[currentTab].className += " finish";
+    if (valid && !document.getElementsByClassName("stepIndicator")[currentStep.value].classList.contains("finish")) {
+        document.getElementsByClassName("stepIndicator")[currentStep.value].className += " finish";
     }
 
     return valid;
@@ -217,6 +215,9 @@ function checkInputValidity(element, currentTab) {
         valid = false;
     } else if (element.name == "email" && !validEmail(element.value)) {
         errors[currentTab][element.name].value = "Invalid email";
+        valid = false;
+    } else if (element.name == "password" && !requirementsMet.value) {
+        errors[currentTab][element.name].value = "Password does not meet requirements";
         valid = false;
     } else if (element.name == "confirm_password" && document.getElementById("password").value != element.value) {
         errors[currentTab][element.name].value = "Passwords do not match";
