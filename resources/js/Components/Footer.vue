@@ -1,6 +1,6 @@
 <template>
     <footer class="p-4 mt-10 sm:mt-0 md:p-8 lg:p-10 bg-text-200">
-        <div class="mx-auto max-w-screen-xl text-center">
+        <div class="mx-auto max-w-screen-xl text-center text-sm sm:text-base">
             <span>
                 {{ new Date().getFullYear() }}
                 <b>"Elder Watch".</b>

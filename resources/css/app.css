@@ -194,6 +194,10 @@ small {
     border-bottom: 1px solid rgb(0, 0, 0, 0.1);
 }
 
+.header-border-top {
+    border-top: 1px solid rgb(0, 0, 0, 0.1);
+}
+
 .header-middle-bg-color {
     background-color: rgb(159, 207, 96);
 }
@@ -434,6 +438,13 @@ a:hover {
     stroke-width: 5;
     stroke: rgb(var(--secondary-300));
 }
+
+.active-tab {
+    border-color: rgb(var(--primary-500));
+    background-color: rgb(var(--primary-200));
+    font-weight: 100;
+}
+
 @media (min-width: 640px) {
     .input:focus {
         box-shadow: 15px -10px 2px #e2e0ff;

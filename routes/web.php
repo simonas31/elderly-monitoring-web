@@ -30,6 +30,10 @@ Route::group(['middleware' => ['guest']], function () {
     Route::get('/register', function () {
         return Inertia::render('Authentication/Register');
     });
+
+    Route::get('/settings', function () {
+        return Inertia::render('User/Settings');
+    });
     // Route::get('/register', [UsersController::class, 'register'])->name('register');
     // Route::get('/login', [UsersController::class, 'login'])->name('login');
 
