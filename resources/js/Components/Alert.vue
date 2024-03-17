@@ -31,12 +31,12 @@ if (props.show) {
 }
 
 const containerClass = computed(() => {
-    return cva("bg-blue-100 flex p-4 rounded-md space-x-3 w-50 items-center", {
+    return cva("absolute left-4 sm:left-auto top-5 right-4 leading-7 flex p-4 rounded-md space-x-3 sm:max-w-96 items-center", {
         variants: {
             intent: {
                 info: "bg-blue-100",
                 warning: "bg-yellow-100",
-                success: "bg-green-100",
+                success: "bg-primary-200",
                 danger: "bg-red-100",
             },
         },
@@ -61,7 +61,7 @@ const iconClass = computed(() => {
 });
 
 const messageClass = computed(() => {
-    return cva("font-medium", {
+    return cva("text-base whitespace-pre-line", {
         variants: {
             intent: {
                 info: "text-blue-900",
@@ -117,9 +117,9 @@ function dismiss() {
                            :class="iconClass" />
             </div>
             <div class="flex-1">
-                <h2 :class="messageClass">
+                <span :class="messageClass">
                     <slot></slot>
-                </h2>
+                </span>
             </div>
             <div class="shrink-0"
                  v-if="props.onDismiss">

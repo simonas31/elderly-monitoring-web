@@ -405,10 +405,6 @@ a:hover {
     border: 2px solid #ffaba5;
 }
 
-#signUpForm .step {
-    display: none;
-}
-
 .top-bar::before {
     content: "";
     position: absolute;
@@ -423,11 +419,21 @@ a:hover {
     background-color: var(--text-200);
 }
 
-.animate {
-    transform: translateY(0); /* Move element from top (0) */
-    height: 0px;
+.animate-h {
+    -webkit-transition: height 1s;
+    -moz-transition: height 1s;
+    -ms-transition: height 1s;
+    -o-transition: height 1s;
+    transition: height 10s;
+    overflow: auto;
+    height: auto !important;
 }
 
+.header-svg-stroke-color {
+    stroke-linecap: round;
+    stroke-width: 5;
+    stroke: rgb(var(--secondary-300));
+}
 @media (min-width: 640px) {
     .input:focus {
         box-shadow: 15px -10px 2px #e2e0ff;

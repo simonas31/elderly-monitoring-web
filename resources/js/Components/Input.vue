@@ -39,11 +39,11 @@ const labelClass = computed(() => {
     return cva("", {
         variants: {
             type: {
-                text: "absolute left-2 -top-4 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-2 transition-all peer-focus:-top-4 peer-focus:text-sm",
-                password: "absolute left-2 -top-4 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-2 transition-all peer-focus:-top-4 peer-focus:text-sm",
+                text: "absolute left-2 -top-4 text-sm peer-placeholder-shown:text-sm peer-placeholder-shown:sm:text-base peer-placeholder-shown:top-2.5 peer-placeholder-shown:sm:top-2 transition-all peer-focus:-top-4 peer-focus:sm:-top-4 peer-focus:sm:text-sm",
+                password: "absolute left-2 -top-4 text-sm peer-placeholder-shown:text-sm peer-placeholder-shown:sm:text-base peer-placeholder-shown:top-2.5 peer-placeholder-shown:sm:top-2 transition-all peer-focus:-top-4 peer-focus:sm:-top-4 peer-focus:sm:text-sm",
                 file: "",
                 number: "",
-                date: "absolute left-2 -top-4 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:top-2 transition-all peer-focus:-top-4 peer-focus:text-sm"
+                date: "absolute left-2 -top-4 text-sm peer-placeholder-shown:text-sm peer-placeholder-shown:sm:text-base peer-placeholder-shown:top-2.5 peer-placeholder-shown:sm:top-2 transition-all peer-focus:-top-4 peer-focus:text-sm"
             }
         }
     })({

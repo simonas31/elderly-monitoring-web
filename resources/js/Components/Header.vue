@@ -23,7 +23,9 @@ function slideDown() {
 
 </script>
 <template>
-    <header class="grid grid-cols-2 sm:grid-cols-3 items-center h-20 header-border-bottom">
+    <header class="flex flex-row justify-between w-full items-center h-20 header-border-bottom">
+        <div></div>
+        <div></div>
         <Link href="/"
               class="flex space-x-2 mx-auto items-center">
         <span class="border rounded-xl header-svg-bg-gradient font-semibold sm:scale-100 w-9 h-9">
@@ -31,14 +33,8 @@ function slideDown() {
         </span>
         <span class="text-lg font-semibold">Elder Watch</span>
         </Link>
-        <div class="mx-auto hidden sm:flex">
-            <div class="border border-white rounded-l-full rounded-r-full inline-flex header-middle-bg-color">
-                <div class="flex justify-between my-2 px-5 space-x-4">
-                    <Link href="/profile">Profile</Link>
-                </div>
-            </div>
-        </div>
         <div class="hidden sm:flex space-x-2 mx-auto">
+            <Link href="/profile">Profile</Link>
             <div>Logged in as: </div>
             <button class="border rounded-xl px-2 pb-0.5 login-btn-bg-gradient text-md"
                     @click="logout">Logout</button>
@@ -53,23 +49,17 @@ function slideDown() {
                       y1="10"
                       x2="40"
                       y2="10"
-                      stroke-linecap="round"
-                      stroke-width="5"
-                      stroke="white" />
+                      class="header-svg-stroke-color" />
                 <line x1="0"
                       y1="20"
                       x2="40"
                       y2="20"
-                      stroke-linecap="round"
-                      stroke-width="5"
-                      stroke="white" />
+                      class="header-svg-stroke-color" />
                 <line x1="0"
                       y1="30"
                       x2="40"
                       y2="30"
-                      stroke-linecap="round"
-                      stroke-width="5"
-                      stroke="white" />
+                      class="header-svg-stroke-color" />
             </svg>
         </div>
         <Slidedown :show="showSlidedown"
