@@ -1,7 +1,7 @@
 <script setup>
 import { Link, useForm } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
-import { LockClosedIcon } from "@heroicons/vue/20/solid";
+import { LockClosedIcon, BellAlertIcon } from "@heroicons/vue/20/solid";
 import { UserCircleIcon } from "@heroicons/vue/16/solid";
 
 const passwordForm = useForm({
@@ -15,6 +15,11 @@ const profileForm = useForm({
 
 const securityForm = useForm({
     security_type: ref(null),
+});
+
+const notificationsForm = useForm({
+    fall_alert: ref(null),
+    risky_alerts: ref(null),
 });
 
 const isDropping = ref(false);
@@ -166,6 +171,10 @@ const updateSecurity = () => {
     //securityForm.post('/updateSecurity');
 };
 
+const updateNotifications = () => {
+    notificationsForm.post('/updateNotifications');
+};
+
 </script>
 <template>
     <Layout>
@@ -288,7 +297,7 @@ const updateSecurity = () => {
                                             :default="'None'"
                                             v-model="securityForm.security_type" />
                                     <span v-if="securityError"
-                                          class="text-rose-600">{{ securityError.value }}</span>
+                                          class="text-rose-600">{{ securityError }}</span>
                                 </div>
                                 <Button intent="primary"
                                         customClasses="sm:min-h-[40px] px-4 my-5 w-full"
@@ -356,11 +365,46 @@ const updateSecurity = () => {
                             </div>
                         </div>
                     </div>
-                    <div class="p-4 m-4 rounded-lg bg-gray-50 dark:bg-gray-800 hidden"
+                    <div class="py-2 m-4 sm:p-4 sm:m-4 hidden"
                          id="notifications"
                          role="tabpanel"
                          aria-labelledby="notifications-tab">
-                        <div class="text-sm sm:text-base">
+                        <div class="container mx-auto max-w-fit text-center">
+                            <div class="relative">
+                                <div class="fill justify-between items-center mt-8 flex text-sm sm:text-base">
+                                    <div class="block">
+                                        <label for="risky_alerts"
+                                               class="checkbox-container">
+                                            <input type="checkbox"
+                                                   id="risky_alerts"
+                                                   name="risky_alerts"
+                                                   v-model="notificationsForm.risky_alerts" />
+                                            <span class="checkmark"></span>
+                                            <p>Risky Alert Notifications</p>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <div class="fill justify-between items-center mt-8 flex text-sm sm:text-base">
+                                    <div class="block">
+                                        <label for="fall_alert"
+                                               class="checkbox-container">
+                                            <input type="checkbox"
+                                                   id="fall_alert"
+                                                   name="fall_alert"
+                                                   v-model="notificationsForm.fall_alert" />
+                                            <span class="checkmark"></span>
+                                            <p>Fall Alert Notification</p>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <Button intent="primary"
+                                    customClasses="sm:min-h-[40px] px-4 mt-8 mb-4"
+                                    id="submit"
+                                    @click="updateNotifications"
+                                    :rightIcon="BellAlertIcon">Update Notifications</Button>
                         </div>
                     </div>
                 </div>

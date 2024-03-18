@@ -34,6 +34,10 @@ Route::group(['middleware' => ['guest']], function () {
     Route::get('/settings', function () {
         return Inertia::render('User/Settings');
     });
+
+    Route::get('/dashboard', function () {
+        return Inertia::render('User/Dashboard');
+    });
     // Route::get('/register', [UsersController::class, 'register'])->name('register');
     // Route::get('/login', [UsersController::class, 'login'])->name('login');
 
