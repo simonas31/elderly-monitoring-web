@@ -1,6 +1,7 @@
 <script setup>
 import { Link, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
+import { ComputerDesktopIcon } from "@heroicons/vue/16/solid";
 
 const form = useForm({});
 
@@ -10,6 +11,7 @@ const logout = () => {
 
 const disabled = ref(false);
 const showSlidedown = ref(false);
+const dropdown = ref(false);
 
 function slideDown() {
     disabled.value = true
@@ -20,55 +22,44 @@ function slideDown() {
     showSlidedown.value = true;
 }
 
+function toggleDropdown() {
+    dropdown.value = !dropdown.value;
+}
+
 </script>
 <template>
-    <header class="grid grid-cols-2 sm:grid-cols-3 items-center h-20 header-bg-color header-border-bottom">
+    <header class="flex flex-row justify-between w-full items-center h-20 header-border-bottom">
         <Link href="/"
-              class="flex sm:space-x-2 mx-auto items-center">
-        <svg width="41"
-             height="41"
-             class="border rounded-xl header-svg-bg-gradient scale-75 sm:scale-100">
-            <line x1="11"
-                  y1="15"
-                  x2="20"
-                  y2="20"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                  stroke="white" />
-            <line x1="29"
-                  y1="15"
-                  x2="20"
-                  y2="20"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                  stroke="white" />
-            <line x1="20"
-                  y1="29"
-                  x2="20"
-                  y2="20"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                  stroke="white" />
-            <polygon points="7,13 20,6 33,13 33,26 20,33 7,26"
-                     fill="none"
-                     stroke="white"
-                     stroke-width="2"
-                     stroke-linecap="round"
-                     stroke-linejoin="round" />
-        </svg>
-        <span>StorageIO</span>
+              class="flex space-x-2 mx-auto items-center">
+        <span class="border rounded-xl header-svg-bg-gradient font-semibold sm:scale-100 w-9 h-9">
+            <ComputerDesktopIcon />
+        </span>
+        <span class="text-lg font-semibold">Elder Watch</span>
         </Link>
-        <div class="mx-auto hidden sm:flex">
-            <div class="border border-slate-600 rounded-l-full rounded-r-full inline-flex header-middle-bg-color">
-                <div class="flex justify-between my-2 px-5 space-x-4">
-                    <Link href="/profile">Profile</Link>
-                </div>
+        <div class="hidden sm:flex space-x-2 mx-auto items-center bg-primary-300 relative p-1 pl-2 rounded-full hover:cursor-pointer"
+             @click="toggleDropdown">
+            <div class="">Name Surname</div>
+            <div class="sm:scale-100 w-9 h-9">
+                <img class="rounded-full"
+                     src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg"
+                     alt="">
             </div>
-        </div>
-        <div class="hidden sm:flex space-x-2 mx-auto">
-            <div>Logged in as: {{ $page.props.auth.user.username }}</div>
-            <button class="border rounded-xl px-2 pb-0.5 login-btn-bg-gradient text-md"
-                    @click="logout">Logout</button>
+            <div
+                 :class="'rounded transition-all border-gray-300 bg-white p-4 absolute top-[50px] right-[-8px] w-[200px] shadow-lg space-y-2 z-50 ' + (dropdown ? '' : 'hidden')">
+                <div>
+                    <Link href="/dashboard">
+                    Dashboard
+                    </Link>
+                </div>
+                <div>
+                    <Link href="/settings">
+                    Settings
+                    </Link>
+                </div>
+                <hr>
+                <div class="cursor-pointer"
+                     @click="logout">Logout</div>
+            </div>
         </div>
         <div class="mx-auto pl-14 sm:hidden"
              :class="{ shake: disabled }">
@@ -80,23 +71,17 @@ function slideDown() {
                       y1="10"
                       x2="40"
                       y2="10"
-                      stroke-linecap="round"
-                      stroke-width="5"
-                      stroke="white" />
+                      class="header-svg-stroke-color" />
                 <line x1="0"
                       y1="20"
                       x2="40"
                       y2="20"
-                      stroke-linecap="round"
-                      stroke-width="5"
-                      stroke="white" />
+                      class="header-svg-stroke-color" />
                 <line x1="0"
                       y1="30"
                       x2="40"
                       y2="30"
-                      stroke-linecap="round"
-                      stroke-width="5"
-                      stroke="white" />
+                      class="header-svg-stroke-color" />
             </svg>
         </div>
         <Slidedown :show="showSlidedown"

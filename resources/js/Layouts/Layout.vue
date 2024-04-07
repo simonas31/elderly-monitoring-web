@@ -22,17 +22,21 @@ watch(() => showAlert, (newShowAlert) => {
         showAlert.value = true;
     }
 });
+
+
 </script>
 <template>
-    <Header v-if="$page.props.auth.user"></Header>
-    <Alert v-if="$page.props.flash"
-           :show="showAlert"
-           :intent="$page.props.flash.type"
-           :on-dismiss="() => (showAlert = false)">{{ $page.props.flash.message }}</Alert>
-    <main class="container sm:m-auto bg-white py-1 text-black">
-        <slot></slot>
-    </main>
-    <Footer v-if="$page.props.auth.user"></Footer>
+    <div class="flex flex-col min-h-screen">
+        <Header></Header>
+        <Alert v-if="$page.props.flash"
+               :show="showAlert"
+               :intent="$page.props.flash.type"
+               :on-dismiss="() => (showAlert = false)">{{ $page.props.flash.message }}</Alert>
+        <main class="flex-grow">
+            <slot></slot>
+        </main>
+        <Footer></Footer>
+    </div>
 </template>
 <script>
 import Header from "@Components/Header.vue";

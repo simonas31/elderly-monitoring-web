@@ -1,8 +1,466 @@
+@import url("https://fonts.googleapis.com/css?family=Noto%20Sans%20JP:700|Noto%20Sans%20JP:400");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    :root {
+        --text-50: 243 247 238;
+        --text-100: 231 239 220;
+        --text-200: 208 223 185;
+        --text-300: 184 207 150;
+        --text-400: 161 191 115;
+        --text-500: 137 175 80;
+        --text-600: 110 140 64;
+        --text-700: 82 105 48;
+        --text-800: 55 70 32;
+        --text-900: 27 35 16;
+        --text-950: 14 17 8;
+
+        --background-50: 238 255 229;
+        --background-100: 220 255 204;
+        --background-200: 185 255 153;
+        --background-300: 150 255 102;
+        --background-400: 116 255 51;
+        --background-500: 81 255 0;
+        --background-600: 65 204 0;
+        --background-700: 48 153 0;
+        --background-800: 32 102 0;
+        --background-900: 16 51 0;
+        --background-950: 8 26 0;
+
+        --primary-50: 243 249 235;
+        --primary-100: 231 243 216;
+        --primary-200: 208 232 176;
+        --primary-300: 184 220 137;
+        --primary-400: 160 208 98;
+        --primary-500: 137 196 59;
+        --primary-600: 109 157 47;
+        --primary-700: 82 118 35;
+        --primary-800: 55 79 23;
+        --primary-900: 27 39 12;
+        --primary-950: 14 20 6;
+
+        --secondary-50: 239 247 238;
+        --secondary-100: 222 238 221;
+        --secondary-200: 189 222 186;
+        --secondary-300: 156 205 152;
+        --secondary-400: 123 189 117;
+        --secondary-500: 90 172 83;
+        --secondary-600: 72 138 66;
+        --secondary-700: 54 103 50;
+        --secondary-800: 36 69 33;
+        --secondary-900: 18 34 17;
+        --secondary-950: 9 17 8;
+
+        --accent-50: 238 247 239;
+        --accent-100: 220 239 223;
+        --accent-200: 186 222 191;
+        --accent-300: 151 206 158;
+        --accent-400: 116 190 126;
+        --accent-500: 82 173 94;
+        --accent-600: 65 139 75;
+        --accent-700: 49 104 56;
+        --accent-800: 33 69 38;
+        --accent-900: 16 35 19;
+        --accent-950: 8 17 9;
+    }
+    .dark {
+        --text-50: 14 17 8;
+        --text-100: 27 35 16;
+        --text-200: 55 70 32;
+        --text-300: 82 105 48;
+        --text-400: 110 140 64;
+        --text-500: 137 175 80;
+        --text-600: 161 191 115;
+        --text-700: 184 207 150;
+        --text-800: 208 223 185;
+        --text-900: 231 239 220;
+        --text-950: 243 247 238;
+
+        --background-50: 8 26 0;
+        --background-100: 15 51 0;
+        --background-200: 31 102 0;
+        --background-300: 46 153 0;
+        --background-400: 61 204 0;
+        --background-500: 76 255 0;
+        --background-600: 112 255 51;
+        --background-700: 148 255 102;
+        --background-800: 184 255 153;
+        --background-900: 219 255 204;
+        --background-950: 237 255 229;
+
+        --primary-50: 14 20 6;
+        --primary-100: 27 39 12;
+        --primary-200: 55 79 23;
+        --primary-300: 82 118 35;
+        --primary-400: 109 157 47;
+        --primary-500: 137 196 59;
+        --primary-600: 160 208 98;
+        --primary-700: 184 220 137;
+        --primary-800: 208 232 176;
+        --primary-900: 231 243 216;
+        --primary-950: 243 249 235;
+
+        --secondary-50: 9 17 8;
+        --secondary-100: 18 34 17;
+        --secondary-200: 36 69 33;
+        --secondary-300: 54 103 50;
+        --secondary-400: 72 138 66;
+        --secondary-500: 90 172 83;
+        --secondary-600: 123 189 117;
+        --secondary-700: 156 205 152;
+        --secondary-800: 189 222 186;
+        --secondary-900: 222 238 221;
+        --secondary-950: 239 247 238;
+
+        --accent-50: 8 17 9;
+        --accent-100: 16 35 19;
+        --accent-200: 33 69 38;
+        --accent-300: 49 104 56;
+        --accent-400: 65 139 75;
+        --accent-500: 82 173 94;
+        --accent-600: 116 190 126;
+        --accent-700: 151 206 158;
+        --accent-800: 186 222 191;
+        --accent-900: 220 239 223;
+        --accent-950: 238 247 239;
+    }
+}
+
+body {
+    font-family: "Noto Sans JP";
+    font-weight: 400;
+    background-color: rgb(var(--background-50));
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-family: "Noto Sans JP";
+    font-weight: 700;
+}
+
+html {
+    font-size: 100%;
+} /* 16px */
+
+h1 {
+    font-size: 4.21rem; /* 67.36px */
+}
+
+h2 {
+    font-size: 3.158rem; /* 50.56px */
+}
+
+h3 {
+    font-size: 2.369rem; /* 37.92px */
+}
+
+h4 {
+    font-size: 1.777rem; /* 28.48px */
+}
+
+h5 {
+    font-size: 1.333rem; /* 21.28px */
+}
+
+small {
+    font-size: 0.75rem; /* 12px */
+}
+
 .middle-of-the-screen {
     width: 50%;
     height: 50%;
+}
+
+::before,
+::after {
+    box-sizing: border-box;
+}
+
+.header-bg-color {
+    background-color: #aece84;
+}
+
+.body-bg-color {
+    background-color: #111129;
+    color: white;
+}
+
+.header-border-bottom {
+    border-bottom: 1px solid rgb(0, 0, 0, 0.1);
+}
+
+.header-border-top {
+    border-top: 1px solid rgb(0, 0, 0, 0.1);
+}
+
+.header-middle-bg-color {
+    background-color: rgb(159, 207, 96);
+}
+
+.header-svg-bg-gradient {
+    background-image: linear-gradient(to right, #b8caa1, #92c057, #7ec91d);
+    transition: background-position 0.5s;
+    background-size: 200% auto;
+}
+
+a:hover {
+    .header-svg-bg-gradient {
+        background-position: 100% 0;
+    }
+}
+
+.login-bg-gradient {
+    background-image: linear-gradient(135deg, #6352ec, #c46ac2);
+    box-shadow: 5px 0 30px rgba(0, 0, 0, 0.35);
+}
+
+.input {
+    background-color: #e2e0ff !important;
+    height: 2.75rem;
+    padding-left: 1rem;
+    transition: box-shadow 0.35s ease-in-out;
+}
+
+.input:focus {
+    outline: none;
+    background-color: #cecbff !important;
+    box-shadow: 8px -10px 2px #e2e0ff;
+}
+
+.input:hover {
+    background-color: #cecbff !important;
+}
+
+.login-btn-bg-gradient:hover {
+    background-position: 100% 0;
+}
+
+.height {
+    height: 80vh;
+}
+
+.checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 26px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.container input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #98a86c;
+}
+
+.checkbox-container:hover input[type="checkbox"] ~ .checkmark {
+    background-color: #798654;
+}
+
+.checkbox-container input[type="checkbox"]:checked ~ .checkmark {
+    background-color: #798654;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.container input[type="checkbox"]:checked ~ .checkmark:after {
+    display: block;
+}
+
+.container .checkmark:after {
+    left: 6px;
+    top: 1px;
+    width: 8px;
+    height: 15px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.fill {
+    width: -moz-available;
+    /* WebKit-based browsers will ignore this. */
+    width: -webkit-fill-available;
+    /* Mozilla-based browsers will ignore this. */
+}
+
+.x-sign::before {
+    content: "\2716";
+    color: transparent;
+    text-shadow: 0 0 0 red;
+    margin: 2px 5px;
+    font-size: 14px;
+}
+
+.ok-sign {
+    display: inline-block;
+    margin: 0 7px;
+    width: 15.2px;
+    height: 11px;
+    border: 4px solid rgb(0, 199, 0);
+    border-top: none;
+    border-right: none;
+    transform: rotate(-45deg);
+}
+
+.slidedown-h {
+    height: 40%;
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.from-olive {
+    --tw-gradient-from: rgb(var(--primary-300)) var(--tw-gradient-from-position);
+    --tw-gradient-to: rgb(var(--primary-600)) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.to-olive {
+    --tw-gradient-to: rgb(var(--primary-600)) var(--tw-gradient-to-position);
+}
+
+.bg-khaki {
+    background-color: #98a86c;
+}
+
+.bg-khaki:hover {
+    background-color: #798654;
+}
+
+#signUpForm .form-header .stepIndicator.active {
+    font-weight: 700 !important;
+}
+
+#signUpForm .form-header .stepIndicator::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    z-index: 9;
+    width: 20px;
+    height: 20px;
+    background-color: #77df00;
+    border-radius: 50%;
+    border: 3px solid #cefa9b;
+}
+
+#signUpForm .form-header .stepIndicator.active::before {
+    background-color: #77df00;
+    border: 3px solid #cefa9b;
+}
+
+#signUpForm .form-header .stepIndicator.finish::before {
+    background-color: #77df00;
+    border: 3px solid #cefa9b;
+}
+
+#signUpForm .form-header .stepIndicator::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    width: 100%;
+    height: 3px;
+    background-color: #f3f3f3;
+}
+
+#signUpForm .form-header .stepIndicator.active::after {
+    background-color: #c6faa3;
+}
+
+#signUpForm .form-header .stepIndicator.finish::after {
+    background-color: #77df00;
+}
+
+#signUpForm .form-header .stepIndicator:last-child:after {
+    display: none;
+}
+
+#signUpForm input.invalid {
+    border: 2px solid #ffaba5;
+}
+
+.top-bar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px; /* Adjust height based on border thickness */
+    background-color: inherit; /* Inherit background color from the input */
+}
+
+.footer-bg {
+    background-color: var(--text-200);
+}
+
+.animate-h {
+    -webkit-transition: height 1s;
+    -moz-transition: height 1s;
+    -ms-transition: height 1s;
+    -o-transition: height 1s;
+    transition: height 10s;
+    overflow: auto;
+    height: auto !important;
+}
+
+.header-svg-stroke-color {
+    stroke-linecap: round;
+    stroke-width: 5;
+    stroke: rgb(var(--secondary-300));
+}
+
+.active-tab {
+    border-color: rgb(var(--primary-500));
+    background-color: rgb(var(--primary-200));
+    font-weight: 100;
+}
+
+@media (min-width: 640px) {
+    .input:focus {
+        box-shadow: 15px -10px 2px #e2e0ff;
+    }
+
+    .checkmark {
+        height: 25px;
+        width: 25px;
+    }
+
+    .container .checkmark:after {
+        left: 9px;
+        top: 3px;
+    }
+
+    .checkbox-container {
+        padding-left: 35px;
+    }
 }
