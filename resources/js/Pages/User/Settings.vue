@@ -4,13 +4,15 @@ import { ref, watch } from "vue";
 import { LockClosedIcon, BellAlertIcon } from "@heroicons/vue/20/solid";
 import { UserCircleIcon } from "@heroicons/vue/16/solid";
 
+const props = defineProps(['user']);
+
 const passwordForm = useForm({
-    currentPassword: ref(null),
-    newPassword: ref(null),
+    current_password: ref(null),
+    new_password: ref(null),
 });
 
 const profileForm = useForm({
-    profilePicture: ref(null),
+    profile_picture: ref(null),
 });
 
 const securityForm = useForm({
@@ -19,7 +21,6 @@ const securityForm = useForm({
 
 const notificationsForm = useForm({
     fall_alert: ref(null),
-    risky_alerts: ref(null),
 });
 
 const isDropping = ref(false);

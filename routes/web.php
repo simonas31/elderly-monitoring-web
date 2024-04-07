@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DevicesController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -21,37 +23,30 @@ Route::get('/', function () {
 /**
  * Unauthenticated routes
  */
-// Route::get('/confirm/{token}', [UsersController::class, 'confirmEmail'])->name('confirmEmail');
+Route::get('/confirm/{token}', [UsersController::class, 'confirmEmail'])->name('confirmEmail');
 Route::group(['middleware' => ['guest']], function () {
-    Route::get('/login', function () {
-        return Inertia::render('Authentication/Login');
-    });
+    Route::get('/', [UsersController::class, 'index']);
 
-    Route::get('/register', function () {
-        return Inertia::render('Authentication/Register');
-    });
+    Route::get('/register', [UsersController::class, 'register'])->name('register');
+    Route::get('/login', [UsersController::class, 'login'])->name('login');
 
-    Route::get('/settings', function () {
-        return Inertia::render('User/Settings');
-    });
-
-    Route::get('/dashboard', function () {
-        return Inertia::render('User/Dashboard');
-    });
-    // Route::get('/register', [UsersController::class, 'register'])->name('register');
-    // Route::get('/login', [UsersController::class, 'login'])->name('login');
-
-    // Route::post('/register', [UsersController::class, 'register'])->name('register.post');
-    // Route::post('/login', [UsersController::class, 'login'])->name('login.post');
+    Route::post('/register', [UsersController::class, 'register'])->name('register.post');
+    Route::post('/login', [UsersController::class, 'login'])->name('login.post');
 });
 
 /**
  * Authenticated routes
  */
 Route::group(['middleware' => ['auth']], function () {
-    // Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
-    // Route::get('/', [FoldersController::class, 'index'])->name('home');
+    Route::get('/dashboard', [UsersController::class, 'dashboard'])->name('dashboard');
+    Route::get('/settings', [UsersController::class, 'settings'])->name('settings');
 
+    Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
+    Route::post('/changeDeviceName', [DevicesController::class, 'changeDeviceName'])->name('changeDeviceName');
+    Route::post('/changePassword', [UsersController::class, 'changePassword'])->name('changePassword');
+    Route::post('/changeSecurityType', [UsersController::class, 'changeSecurityType'])->name('changeSecurityType');
+    Route::post('/toggleNotifications', [UsersController::class, 'toggleNotifications'])->name('toggleNotifications');
+    Route::post('/changeProfilePicture', [UsersController::class, 'changeProfilePicture'])->name('changeProfilePicture');
     // //Folders
     // // Route::get('/', [FoldersController::class, 'index'])->name('folders');
     // Route::get('/folders/{folder_id}', [FoldersController::class, 'find'])->name('folders');

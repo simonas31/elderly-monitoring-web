@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('role_id');
             $table->string('phone_number');
             $table->date('date_of_birth');
+            $table->boolean('fall_notifications')->default(true);
             $table->binary('profile_picture')->nullable()->default(null);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

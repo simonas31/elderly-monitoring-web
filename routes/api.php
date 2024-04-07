@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ActivityLogsController;
+use App\Http\Controllers\DevicesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+//pridet access token?
+Route::post('registerDevice', [DevicesController::class, 'registerDevice']);
+Route::post('movementDetected', [ActivityLogsController::class, 'movementDetected']);
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('getStatistics', [ActivityLogsController::class, 'getStatistics']);
 });

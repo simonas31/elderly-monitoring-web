@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class UsersController extends Controller
@@ -18,6 +19,12 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         return Inertia::render("Index");
+    }
+
+    public function dashboard(Request $request)
+    {
+        //pass custom parameters to page
+        return Inertia::render('User/Dashboard');
     }
 
     /**
@@ -173,5 +180,107 @@ class UsersController extends Controller
         );
 
         return redirect()->route('login');
+    }
+
+    public function settings(Request $request)
+    {
+        return Inertia::render('User/Settings', [
+            'user' => $request->user()
+        ]);
+    }
+
+    /**
+     * Change user password
+     */
+    public function changePassword(Request $request)
+    {
+        $user = $request->user();
+
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+            return redirect()->route('settings')->with('flash', [
+                'type' => 'danger',
+                'message' => 'Incorrect current password'
+            ]);
+        }
+
+        $user->password = $request->input('new_password');
+
+        if ($user->save()) {
+            return redirect()->route('settings')->with('flash', [
+                'type' => 'success',
+                'message' => 'Password was change successfully'
+            ]);
+        }
+
+        return redirect()->route('settings')->with('flash', [
+            'type' => 'danger',
+            'message' => 'Could not change password. Please try again'
+        ]);
+    }
+
+    public function changeSecurityType(Request $request)
+    {
+        $user = $request->user();
+
+        $user->security_type = $request->input('security_type');
+
+        if ($user->save()) {
+            return redirect()->route('settings')->with('flash', [
+                'type' => 'success',
+                'message' => 'Security type was changed successfully'
+            ]);
+        }
+
+        return redirect()->route('settings')->with('flash', [
+            'type' => 'danger',
+            'message' => 'Could not change security type. Please try again'
+        ]);
+    }
+
+    /**
+     * Toggle user notifications
+     */
+    public function toggleNotifications(Request $request)
+    {
+        $user = $request->user();
+
+        $user->fall_notifications = $request->input('fall_alert');
+
+        if ($user->save()) {
+            return redirect()->route('settings')->with('flash', [
+                'type' => 'success',
+                'message' => 'Notifications were updated successfully'
+            ]);
+        }
+
+        return redirect()->route('settings')->with('flash', [
+            'type' => 'danger',
+            'message' => 'Could not update notifications. Please try again'
+        ]);
+    }
+
+    public function changeProfilePicture(Request $request)
+    {
+        if (!$request->isMethod('post')) {
+            return redirect()->route('settings');
+        }
+
+        $picture = file_get_contents($request->file('profile_picture'));
+
+        $user = $request->user();
+
+        $user->profile_picture = $picture;
+
+        if ($user->save()) {
+            return redirect()->route('settings')->with('flash', [
+                'type' => 'success',
+                'message' => 'Profile picture updated successfully'
+            ]);
+        }
+
+        return redirect()->route('settings')->with('flash', [
+            'type' => 'danger',
+            'message' => 'Could not update profile picture. Please try again'
+        ]);
     }
 }
