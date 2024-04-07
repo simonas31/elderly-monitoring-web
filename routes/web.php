@@ -25,7 +25,7 @@ Route::get('/', function () {
  */
 Route::get('/confirm/{token}', [UsersController::class, 'confirmEmail'])->name('confirmEmail');
 Route::group(['middleware' => ['guest']], function () {
-    Route::get('/', [UsersController::class, 'index']);
+    Route::get('/', [UsersController::class, 'index'])->name('index');
 
     Route::get('/register', [UsersController::class, 'register'])->name('register');
     Route::get('/login', [UsersController::class, 'login'])->name('login');

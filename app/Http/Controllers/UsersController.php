@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Jobs\MailSender;
 use App\Models\EmailConfirmation;
 use App\Models\User;
+use App\Notifications\SendTwoFactorCodeEmail;
+use App\Notifications\SendTwoFactorCodeSMS;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +39,7 @@ class UsersController extends Controller
         }
 
         if ($request->isMethod('post')) {
-            $data = $request->only('email', 'password', 'remember');
+            $data = $request->only('email', 'password', 'remember', 'code');
 
             if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']], $data['remember'])) {
                 $user = Auth::user();
@@ -47,9 +49,58 @@ class UsersController extends Controller
                     $userFromDb = User::find($user->id);
                     $userFromDb->last_login = Carbon::now()->format('Y-m-d H:i:s');
                     $userFromDb->save();
+                    if ($userFromDb->security_type == 0) {
+                        define('USER_ID', $user->id);
+                        return redirect()->route('dashboard');
+                    }
 
-                    define('USER_ID', $user->id);
-                    return redirect()->route('home');
+                    if ($user->two_factor_code == null) {
+                        Auth::logout();
+                        $request->session()->invalidate();
+                        $request->session()->regenerateToken();
+                        $userFromDb->generateTwoFactorCode();
+                        if ($userFromDb->security_type == 1) {
+                            $userFromDb->notify(new SendTwoFactorCodeEmail());
+                        } else {
+                            $userFromDb->notify(new SendTwoFactorCodeSMS());
+                        }
+                        return back()->with('flash', [
+                            'type' => 'info',
+                            'message' => 'Please enter 2FA code'
+                        ]);
+                    }
+
+                    // Send 2FA code
+                    $response = $userFromDb->checkTwoFactorCode($data['code']);
+                    if ($response == "Code is empty") {
+                        Auth::logout();
+                        $request->session()->invalidate();
+                        $request->session()->regenerateToken();
+                        return back()->with('flash', [
+                            'type' => 'danger',
+                            'message' => 'Please enter 2FA code'
+                        ]);
+                    } else if ($response == "Expired") {
+                        Auth::logout();
+                        $request->session()->invalidate();
+                        $request->session()->regenerateToken();
+                        return back()->with('flash', [
+                            'type' => 'danger',
+                            'message' => '2FA code is expired. Please try again later'
+                        ]);
+                    } else if ($response == "Invalid code") {
+                        Auth::logout();
+                        $request->session()->invalidate();
+                        $request->session()->regenerateToken();
+                        return back()->with('flash', [
+                            'type' => 'danger',
+                            'message' => 'Incorrect 2FA code'
+                        ]);
+                    } else if ($response == "OK") {
+                        $userFromDb->resetTwoFactorCode();
+                        return redirect()->route('dashboard');
+                    }
+                    //
                 } else {
                     // Logout the user since the email is not verified
                     Auth::logout();
@@ -58,14 +109,14 @@ class UsersController extends Controller
 
                     return back()->with('flash', [
                         'type' => 'danger',
-                        'message' => 'Email not verified. Please check your email for verification.'
+                        'message' => 'Email not verified. Please check your email for verification'
                     ]);
                 }
             } else {
                 // Invalid credentials
                 return back()->with('flash', [
                     'type' => 'danger',
-                    'message' => 'Invalid credentials. Please try again.'
+                    'message' => 'Invalid credentials. Please try again'
                 ]);
             }
         }
@@ -155,7 +206,7 @@ class UsersController extends Controller
         try {
             $decryptedToken = Crypt::decrypt($emailConfirmation->token);
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-            return redirect()->route('home'); // Invalid or tampered token
+            return redirect()->route('index'); // Invalid or tampered token
         }
 
         //user is not logged in before email confirmation

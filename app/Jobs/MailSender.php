@@ -2,11 +2,15 @@
 
 namespace App\Jobs;
 
+use App\Mail\EmailConfirmationMail;
+use App\Mail\SendTwoFactorCode;
+use App\Models\EmailConfirmation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
 
 class MailSender implements ShouldQueue

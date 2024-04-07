@@ -22,8 +22,19 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'surname',
         'email',
         'password',
+        'security_type',
+        'parent_user_id',
+        'role_id',
+        'phone_number',
+        'date_of_birth',
+        'fall_notifications',
+        'profile_picture',
+        'email_verified_at',
+        'two_factor_code',
+        'two_factor_expires_at',
     ];
 
     /**
@@ -64,5 +75,43 @@ class User extends Authenticatable
     public function getRole()
     {
         return Role::find($this->role_id);
+    }
+
+    public function generateTwoFactorCode(): void
+    {
+        $this->timestamps = false;
+        $this->two_factor_code = rand(100000, 999999);
+        $this->two_factor_expires_at = now()->addMinutes(10);
+        $this->save();
+    }
+
+    public function resetTwoFactorCode(): void
+    {
+        $this->timestamps = false;
+        $this->two_factor_code = null;
+        $this->two_factor_expires_at = null;
+        $this->save();
+    }
+
+    public function checkTwoFactorCode($code): string
+    {
+        if (!isset($code)) {
+            return "Code is empty";
+        }
+
+        if ($this->two_factor_expires_at < now()) {
+            return "Expired";
+        }
+
+        if ($this->two_factor_code == $code) {
+            return "OK";
+        } else {
+            return "Invalid code";
+        }
+    }
+
+    public function routeNotificationForVonage($notification)
+    {
+        return $this->phone_number;
     }
 }
