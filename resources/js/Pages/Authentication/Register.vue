@@ -13,6 +13,7 @@ const form = useForm({
     phone_number: ref(null),
     profile_picture: ref(null),
     security_type: ref(null),
+    parent_user_id: ref(null), // add user_id from invite request token
 });
 
 const step1Errors = {
