@@ -11,6 +11,7 @@ const logout = () => {
 
 const disabled = ref(false);
 const showSlidedown = ref(false);
+const dropdown = ref(false);
 
 function slideDown() {
     disabled.value = true
@@ -21,11 +22,13 @@ function slideDown() {
     showSlidedown.value = true;
 }
 
+function toggleDropdown() {
+    dropdown.value = !dropdown.value;
+}
+
 </script>
 <template>
     <header class="flex flex-row justify-between w-full items-center h-20 header-border-bottom">
-        <div></div>
-        <div></div>
         <Link href="/"
               class="flex space-x-2 mx-auto items-center">
         <span class="border rounded-xl header-svg-bg-gradient font-semibold sm:scale-100 w-9 h-9">
@@ -33,11 +36,30 @@ function slideDown() {
         </span>
         <span class="text-lg font-semibold">Elder Watch</span>
         </Link>
-        <div class="hidden sm:flex space-x-2 mx-auto">
-            <Link href="/profile">Profile</Link>
-            <div>Logged in as: </div>
-            <button class="border rounded-xl px-2 pb-0.5 login-btn-bg-gradient text-md"
-                    @click="logout">Logout</button>
+        <div class="hidden sm:flex space-x-2 mx-auto items-center bg-primary-300 relative p-1 pl-2 rounded-full hover:cursor-pointer"
+             @click="toggleDropdown">
+            <div class="">Name Surname</div>
+            <div class="sm:scale-100 w-9 h-9">
+                <img class="rounded-full"
+                     src="https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg"
+                     alt="">
+            </div>
+            <div
+                 :class="'rounded transition-all border-gray-300 bg-white p-4 absolute top-[50px] right-[-8px] w-[200px] shadow-lg space-y-2 z-50 ' + (dropdown ? '' : 'hidden')">
+                <div>
+                    <Link href="/dashboard">
+                    Dashboard
+                    </Link>
+                </div>
+                <div>
+                    <Link href="/settings">
+                    Settings
+                    </Link>
+                </div>
+                <hr>
+                <div class="cursor-pointer"
+                     @click="logout">Logout</div>
+            </div>
         </div>
         <div class="mx-auto pl-14 sm:hidden"
              :class="{ shake: disabled }">

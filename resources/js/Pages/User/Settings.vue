@@ -373,21 +373,6 @@ const updateNotifications = () => {
                             <div class="relative">
                                 <div class="fill justify-between items-center mt-8 flex text-sm sm:text-base">
                                     <div class="block">
-                                        <label for="risky_alerts"
-                                               class="checkbox-container">
-                                            <input type="checkbox"
-                                                   id="risky_alerts"
-                                                   name="risky_alerts"
-                                                   v-model="notificationsForm.risky_alerts" />
-                                            <span class="checkmark"></span>
-                                            <p>Risky Alert Notifications</p>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="relative">
-                                <div class="fill justify-between items-center mt-8 flex text-sm sm:text-base">
-                                    <div class="block">
                                         <label for="fall_alert"
                                                class="checkbox-container">
                                             <input type="checkbox"
