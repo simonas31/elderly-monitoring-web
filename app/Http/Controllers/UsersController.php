@@ -51,7 +51,7 @@ class UsersController extends Controller
             $userFromDb = User::where('email', $data['email'])->first();
 
             if (!isset($userFromDb)) {
-                return back()->with('flash', [
+                return back(400)->with('flash', [
                     'type' => 'danger',
                     'message' => 'Email does not exist'
                 ]);
@@ -60,7 +60,7 @@ class UsersController extends Controller
             //check password
             if (!Hash::check($data['password'], $userFromDb->password)) {
                 // Invalid credentials
-                return back()->with('flash', [
+                return back(400)->with('flash', [
                     'type' => 'danger',
                     'message' => 'Invalid credentials. Please try again'
                 ]);
@@ -68,7 +68,7 @@ class UsersController extends Controller
 
             //user verified its account
             if (!$userFromDb->email_verified_at) {
-                return back()->with('flash', [
+                return back(400)->with('flash', [
                     'type' => 'danger',
                     'message' => 'Email not verified. Please check your email for verification'
                 ]);
@@ -102,19 +102,26 @@ class UsersController extends Controller
                 return back()->with('flash', [
                     'type' => 'danger',
                     'message' => 'Please enter 2FA code'
-                ]);
+                ])->with('twoFA', true);
             } else if ($response == "Expired") {
+                $userFromDb->resetTwoFactorCode();
+                if ($userFromDb->security_type == 1) {
+                    $userFromDb->notify(new SendTwoFactorCodeEmail());
+                } else {
+                    $userFromDb->notify(new SendTwoFactorCodeSMS());
+                }
                 return back()->with('flash', [
                     'type' => 'danger',
                     'message' => '2FA code is expired. Please try again later'
-                ]);
+                ])->with('twoFA', true);
             } else if ($response == "Invalid code") {
                 return back()->with('flash', [
                     'type' => 'danger',
                     'message' => 'Incorrect 2FA code'
-                ]);
+                ])->with('twoFA', true);
             } else if ($response == "OK") {
                 $userFromDb->resetTwoFactorCode();
+                Auth::login($userFromDb, $data['remember']);
                 return redirect()->route('dashboard');
             }
         }
@@ -144,7 +151,9 @@ class UsersController extends Controller
             $data = $request->all();
             $content_type = !empty($request->file('profile_picture')) ? $request->file('profile_picture')->getMimeType() : null;
 
-            $data['profile_picture'] = !empty($content_type) ? 'data:' . $content_type . ';base64,' .  base64_encode($request->file('profile_picture')->getContent()) : null;
+            if ($request->hasFile('profile_picture')) {
+                $data['profile_picture'] = "data:$content_type;base64," . base64_encode(file_get_contents($request->file('profile_picture')));
+            }
             $data['role_id'] = 1; //relative - family member
 
             if (User::where('email', $data['email'])->first() != null) {
@@ -251,7 +260,7 @@ class UsersController extends Controller
             return redirect()->route('settings')->with('flash', [
                 'type' => 'danger',
                 'message' => 'Incorrect current password'
-            ]);
+            ])->with('tab', 'privacy-settings');
         }
 
         $user->password = $request->input('new_password');
@@ -260,13 +269,13 @@ class UsersController extends Controller
             return redirect()->route('settings')->with('flash', [
                 'type' => 'success',
                 'message' => 'Password was change successfully'
-            ]);
+            ])->with('tab', 'privacy-settings');
         }
 
         return redirect()->route('settings')->with('flash', [
             'type' => 'danger',
             'message' => 'Could not change password. Please try again'
-        ]);
+        ])->with('tab', 'privacy-settings');
     }
 
     public function changeSecurityType(Request $request)
@@ -279,13 +288,13 @@ class UsersController extends Controller
             return redirect()->route('settings')->with('flash', [
                 'type' => 'success',
                 'message' => 'Security type was changed successfully'
-            ]);
+            ])->with('tab', 'privacy-settings');
         }
 
         return redirect()->route('settings')->with('flash', [
             'type' => 'danger',
             'message' => 'Could not change security type. Please try again'
-        ]);
+        ])->with('tab', 'privacy-settings');
     }
 
     /**
@@ -301,22 +310,27 @@ class UsersController extends Controller
             return redirect()->route('settings')->with('flash', [
                 'type' => 'success',
                 'message' => 'Notifications were updated successfully'
-            ]);
+            ])->with('tab', 'notifications');
         }
 
         return redirect()->route('settings')->with('flash', [
             'type' => 'danger',
             'message' => 'Could not update notifications. Please try again'
-        ]);
+        ])->with('tab', 'notifications');
     }
 
     public function changeProfilePicture(Request $request)
     {
         if (!$request->isMethod('post')) {
-            return redirect()->route('settings');
+            return redirect()->route('settings')->with('tab', 'profile');
         }
+        $content_type = !empty($request->file('profile_picture')) ? $request->file('profile_picture')->getMimeType() : null;
 
-        $picture = file_get_contents($request->file('profile_picture'));
+        if ($request->hasFile('profile_picture')) {
+            $picture = "data:$content_type;base64," . base64_encode(file_get_contents($request->file('profile_picture')));
+        } else {
+            $picture = null;
+        }
 
         $user = $request->user();
 
@@ -326,12 +340,12 @@ class UsersController extends Controller
             return redirect()->route('settings')->with('flash', [
                 'type' => 'success',
                 'message' => 'Profile picture updated successfully'
-            ]);
+            ])->with('tab', 'profile');
         }
 
         return redirect()->route('settings')->with('flash', [
             'type' => 'danger',
             'message' => 'Could not update profile picture. Please try again'
-        ]);
+        ])->with('tab', 'profile');
     }
 }

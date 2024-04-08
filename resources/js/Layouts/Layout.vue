@@ -25,7 +25,7 @@ watch(() => page.props, (newFlash) => {
 </script>
 <template>
     <div class="flex flex-col min-h-screen">
-        <Header></Header>
+        <Header :auth="page.props.auth"></Header>
         <Alert v-if="page.props.flash"
                :show="showAlert"
                :intent="page.props.flash.type"

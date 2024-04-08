@@ -95,12 +95,12 @@ class User extends Authenticatable
 
     public function checkTwoFactorCode($code): string
     {
-        if (!isset($code)) {
-            return "Code is empty";
+        if (isset($this->two_factor_expires_at) && $this->two_factor_expires_at < now()) {
+            return "Expired";
         }
 
-        if ($this->two_factor_expires_at < now()) {
-            return "Expired";
+        if (!isset($code)) {
+            return "Code is empty";
         }
 
         if ($this->two_factor_code == $code) {

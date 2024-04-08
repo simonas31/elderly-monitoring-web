@@ -2,12 +2,7 @@
 import { Link, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 
-const props = defineProps({
-    twoFA: {
-        type: Object,
-        default: undefined,
-    },
-});
+const twoFa = ref(false);
 
 const form = useForm({
     email: ref(null),
@@ -17,7 +12,13 @@ const form = useForm({
 });
 
 const login = async () => {
-    form.post("/login");
+    form.post("/login", {
+        onSuccess: (response) => {
+            if (response.props.twoFA) {
+                twoFa.value = true;
+            }
+        }
+    });
 };
 </script>
 <template>
@@ -58,7 +59,7 @@ const login = async () => {
                                         <label for="password"
                                                class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label>
                                     </div>
-                                    <div v-if="props.twoFA"
+                                    <div v-if="twoFa"
                                          class="relative">
                                         <input autocomplete="off"
                                                id="2fa"

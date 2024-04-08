@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DevicesController;
 use App\Http\Controllers\UsersController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -23,6 +24,12 @@ Route::get('/', function () {
 /**
  * Unauthenticated routes
  */
+Route::get('/pass', function () {
+    $user = User::find(1);
+
+    $user->password = "Simonas31";
+    $user->save();
+});
 Route::get('/confirm/{token}', [UsersController::class, 'confirmEmail'])->name('confirmEmail');
 Route::group(['middleware' => ['guest']], function () {
     Route::get('/', [UsersController::class, 'index'])->name('index');

@@ -1,10 +1,10 @@
 <script setup>
 import { Link, useForm } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { LockClosedIcon, BellAlertIcon } from "@heroicons/vue/20/solid";
 import { UserCircleIcon } from "@heroicons/vue/16/solid";
 
-const props = defineProps(['user']);
+const props = defineProps(['user', 'tab']);
 
 const passwordForm = useForm({
     current_password: ref(null),
@@ -57,7 +57,7 @@ const toggleTab = (tab, e) => {
 const onFileChange = (e) => {
     const file = e.target.files[0];
     let imgUrl = URL.createObjectURL(file);
-    form.profile_picture = file;
+    profileForm.profile_picture = file;
     imageUrl.value = imgUrl;
 
     isDropping.value = false;
@@ -91,7 +91,7 @@ const onDrop = (e) => {
     dropped.value = true;
 }
 
-watch(() => passwordForm.newPassword, (newPassword) => {
+watch(() => passwordForm.new_password, (newPassword) => {
     requirementsMet.value = true;
     if (newPassword.length >= 8) {
         document.querySelector(".atleast").classList.remove("x-sign");
@@ -131,25 +131,28 @@ watch(() => passwordForm.newPassword, (newPassword) => {
 });
 
 const validatePassword = () => {
-    if (passwordForm.currentPassword == null) {
+    if (passwordForm.current_password == null) {
         passwordErrors.password.value = "Current password cannot be empty";
+        return;
     } else {
-        passwordErrors.password = null;
+        passwordErrors.password.value = null;
     }
 
     if (!requirementsMet.value) {
         passwordErrors.newPassword.value = "Password did not meet the requirements";
+        return;
     } else {
         passwordErrors.newPassword.value = null;
     }
 
-    if (passwordForm.newPassword != confirmPassword.value) {
+    if (passwordForm.new_password != confirmPassword.value) {
         passwordErrors.newPasswordConfirm.value = "Passwords are not equal";
+        return;
     } else {
         passwordErrors.newPasswordConfirm.value = null;
     }
     //post
-    // passwordForm.post('/changePassword');
+    passwordForm.post('/changePassword');
 };
 
 const changeProfilePicture = () => {
@@ -169,12 +172,22 @@ const updateSecurity = () => {
         return;
     }
 
-    //securityForm.post('/updateSecurity');
+    securityForm.post('/changeSecurityType');
 };
 
 const updateNotifications = () => {
-    notificationsForm.post('/updateNotifications');
+    notificationsForm.post('/toggleNotifications');
 };
+
+onMounted(() => {
+    securityForm.security_type = props.user.security_type;
+    notificationsForm.fall_alert = props.user.fall_notifications;
+    if (props.user.fall_notifications) {
+        var checkbox = document.getElementsByClassName("checkmark")[0];
+        checkbox.classList.add('checked');
+        console.log(checkbox);
+    }
+});
 
 </script>
 <template>
@@ -295,7 +308,6 @@ const updateNotifications = () => {
                                             name="security_type"
                                             placeholder="Security Type"
                                             :options="['None', 'Email', 'SMS']"
-                                            :default="'None'"
                                             v-model="securityForm.security_type" />
                                     <span v-if="securityError"
                                           class="text-rose-600">{{ securityError }}</span>
@@ -314,7 +326,7 @@ const updateNotifications = () => {
                                            name="current_password"
                                            type="password"
                                            placeholder="Current Password"
-                                           v-model="passwordForm.currentPassword" />
+                                           v-model="passwordForm.current_password" />
                                     <span v-if="passwordErrors.password"
                                           class="text-rose-600">{{ passwordErrors.password.value }}</span>
                                 </div>
@@ -325,7 +337,7 @@ const updateNotifications = () => {
                                            name="new_password"
                                            type="password"
                                            placeholder="New Password"
-                                           v-model="passwordForm.newPassword" />
+                                           v-model="passwordForm.new_password" />
                                     <span v-if="passwordErrors.newPassword"
                                           class="text-rose-600">{{ passwordErrors.newPassword.value }}</span>
                                 </div>
