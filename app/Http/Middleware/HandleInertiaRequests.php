@@ -38,6 +38,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             //flash message
             'flash' => session('flash'),
+            'twoFA' => session('2fa'),
             //csrf token
             'csrf_token' => csrf_token(),
             //user is authenticated

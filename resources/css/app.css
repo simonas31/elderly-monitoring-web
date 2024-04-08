@@ -445,6 +445,10 @@ a:hover {
     font-weight: 100;
 }
 
+.z-9999 {
+    z-index: 9999;
+}
+
 @media (min-width: 640px) {
     .input:focus {
         box-shadow: 15px -10px 2px #e2e0ff;

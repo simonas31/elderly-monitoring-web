@@ -4,8 +4,8 @@ import { ref, watch, onMounted } from "vue";
 import { ArrowLongRightIcon, ArrowLongLeftIcon } from "@heroicons/vue/20/solid";
 
 const form = useForm({
-    first_name: ref(null),
-    last_name: ref(null),
+    name: ref(null),
+    surname: ref(null),
     password: ref(null),
     confirm_password: ref(null),
     email: ref(null),
@@ -17,8 +17,8 @@ const form = useForm({
 });
 
 const step1Errors = {
-    first_name: ref(null),
-    last_name: ref(null),
+    name: ref(null),
+    surname: ref(null),
     date_of_birth: ref(null),
 };
 
@@ -49,6 +49,7 @@ const currentStep = ref(0);
 const requirementsMet = ref(false);
 
 const register = async (e) => {
+    e.preventDefault();
     if (!validateForm()) {
         return false;
     }
@@ -277,23 +278,23 @@ onMounted(() => {
                                 <div class="flex flex-col mx-auto space-y-6 w-4/5">
                                     <div class="relative">
                                         <Input autocomplete="off"
-                                               id="first_name"
-                                               name="first_name"
+                                               id="name"
+                                               name="name"
                                                type="text"
                                                placeholder="First Name"
                                                v-model="form.firstname" />
-                                        <span v-if="step1Errors.first_name.value"
-                                              class="text-rose-600">{{ step1Errors.first_name.value }}</span>
+                                        <span v-if="step1Errors.name.value"
+                                              class="text-rose-600">{{ step1Errors.name.value }}</span>
                                     </div>
                                     <div class="relative">
                                         <Input autocomplete="off"
-                                               id="last_name"
-                                               name="last_name"
+                                               id="surname"
+                                               name="surname"
                                                type="text"
                                                placeholder="Last Name"
                                                v-model="form.lastname" />
-                                        <span v-if="step1Errors.last_name.value"
-                                              class="text-rose-600">{{ step1Errors.last_name.value }}</span>
+                                        <span v-if="step1Errors.surname.value"
+                                              class="text-rose-600">{{ step1Errors.surname.value }}</span>
                                     </div>
 
                                     <div class="relative">

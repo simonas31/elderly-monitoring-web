@@ -41,83 +41,81 @@ class UsersController extends Controller
         if ($request->isMethod('post')) {
             $data = $request->only('email', 'password', 'remember', 'code');
 
-            if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']], $data['remember'])) {
-                $user = Auth::user();
+            if (empty($data['email']) || empty($data['password'])) {
+                return back()->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Input credentials cannot be empty'
+                ]);
+            }
+            //find user by email
+            $userFromDb = User::where('email', $data['email'])->first();
 
-                if ($user->email_verified_at) {
-                    // The user is logged in and the email is verified
-                    $userFromDb = User::find($user->id);
-                    $userFromDb->last_login = Carbon::now()->format('Y-m-d H:i:s');
-                    $userFromDb->save();
-                    if ($userFromDb->security_type == 0) {
-                        define('USER_ID', $user->id);
-                        return redirect()->route('dashboard');
-                    }
+            if (!isset($userFromDb)) {
+                return back()->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Email does not exist'
+                ]);
+            }
 
-                    if ($user->two_factor_code == null) {
-                        Auth::logout();
-                        $request->session()->invalidate();
-                        $request->session()->regenerateToken();
-                        $userFromDb->generateTwoFactorCode();
-                        if ($userFromDb->security_type == 1) {
-                            $userFromDb->notify(new SendTwoFactorCodeEmail());
-                        } else {
-                            $userFromDb->notify(new SendTwoFactorCodeSMS());
-                        }
-                        return back()->with('flash', [
-                            'type' => 'info',
-                            'message' => 'Please enter 2FA code'
-                        ]);
-                    }
-
-                    // Send 2FA code
-                    $response = $userFromDb->checkTwoFactorCode($data['code']);
-                    if ($response == "Code is empty") {
-                        Auth::logout();
-                        $request->session()->invalidate();
-                        $request->session()->regenerateToken();
-                        return back()->with('flash', [
-                            'type' => 'danger',
-                            'message' => 'Please enter 2FA code'
-                        ]);
-                    } else if ($response == "Expired") {
-                        Auth::logout();
-                        $request->session()->invalidate();
-                        $request->session()->regenerateToken();
-                        return back()->with('flash', [
-                            'type' => 'danger',
-                            'message' => '2FA code is expired. Please try again later'
-                        ]);
-                    } else if ($response == "Invalid code") {
-                        Auth::logout();
-                        $request->session()->invalidate();
-                        $request->session()->regenerateToken();
-                        return back()->with('flash', [
-                            'type' => 'danger',
-                            'message' => 'Incorrect 2FA code'
-                        ]);
-                    } else if ($response == "OK") {
-                        $userFromDb->resetTwoFactorCode();
-                        return redirect()->route('dashboard');
-                    }
-                    //
-                } else {
-                    // Logout the user since the email is not verified
-                    Auth::logout();
-                    $request->session()->invalidate();
-                    $request->session()->regenerateToken();
-
-                    return back()->with('flash', [
-                        'type' => 'danger',
-                        'message' => 'Email not verified. Please check your email for verification'
-                    ]);
-                }
-            } else {
+            //check password
+            if (!Hash::check($data['password'], $userFromDb->password)) {
                 // Invalid credentials
                 return back()->with('flash', [
                     'type' => 'danger',
                     'message' => 'Invalid credentials. Please try again'
                 ]);
+            }
+
+            //user verified its account
+            if (!$userFromDb->email_verified_at) {
+                return back()->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Email not verified. Please check your email for verification'
+                ]);
+            }
+
+            // $userFromDb->last_login = Carbon::now()->format('Y-m-d H:i:s');
+            $userFromDb->save();
+            if ($userFromDb->security_type == 0) {
+                Auth::login($userFromDb, $data['remember']);
+                define('USER_ID', $userFromDb->id);
+                return redirect()->route('dashboard');
+            }
+
+            // Generete code for
+            if ($userFromDb->two_factor_code == null) {
+                $userFromDb->generateTwoFactorCode();
+                if ($userFromDb->security_type == 1) {
+                    $userFromDb->notify(new SendTwoFactorCodeEmail());
+                } else {
+                    $userFromDb->notify(new SendTwoFactorCodeSMS());
+                }
+                return back()->with('flash', [
+                    'type' => 'info',
+                    'message' => 'Please enter 2FA code'
+                ])->with('twoFA', true);
+            }
+
+            // Send 2FA code
+            $response = $userFromDb->checkTwoFactorCode($data['code']);
+            if ($response == "Code is empty") {
+                return back()->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Please enter 2FA code'
+                ]);
+            } else if ($response == "Expired") {
+                return back()->with('flash', [
+                    'type' => 'danger',
+                    'message' => '2FA code is expired. Please try again later'
+                ]);
+            } else if ($response == "Invalid code") {
+                return back()->with('flash', [
+                    'type' => 'danger',
+                    'message' => 'Incorrect 2FA code'
+                ]);
+            } else if ($response == "OK") {
+                $userFromDb->resetTwoFactorCode();
+                return redirect()->route('dashboard');
             }
         }
     }
@@ -144,8 +142,10 @@ class UsersController extends Controller
 
         if ($request->isMethod('post')) {
             $data = $request->all();
-            $data['profile_picture'] = file_get_contents($request->file('profile_picture'));
-            $data['role'] = 1;
+            $content_type = !empty($request->file('profile_picture')) ? $request->file('profile_picture')->getMimeType() : null;
+
+            $data['profile_picture'] = !empty($content_type) ? 'data:' . $content_type . ';base64,' .  base64_encode($request->file('profile_picture')->getContent()) : null;
+            $data['role_id'] = 1; //relative - family member
 
             if (User::where('email', $data['email'])->first() != null) {
                 return redirect()->route('register')->with('flash', [

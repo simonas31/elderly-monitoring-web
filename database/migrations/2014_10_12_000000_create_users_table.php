@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('phone_number');
             $table->date('date_of_birth');
             $table->boolean('fall_notifications')->default(true);
-            $table->binary('profile_picture')->nullable()->default(null);
+            $table->mediumText('profile_picture')->nullable()->default(null);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('two_factor_code')->nullable();
             $table->dateTime('two_factor_expires_at')->nullable();

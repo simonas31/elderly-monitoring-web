@@ -31,7 +31,7 @@ if (props.show) {
 }
 
 const containerClass = computed(() => {
-    return cva("absolute left-4 sm:left-auto top-5 right-4 leading-7 flex p-4 rounded-md space-x-3 sm:max-w-96 items-center", {
+    return cva("absolute left-4 sm:left-auto top-5 right-4 leading-7 flex p-4 rounded-md space-x-3 sm:max-w-96 items-center z-9999", {
         variants: {
             intent: {
                 info: "bg-blue-100",
