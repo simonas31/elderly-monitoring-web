@@ -14,12 +14,14 @@ const form = useForm({
     profile_picture: ref(null),
     security_type: ref(null),
     parent_user_id: ref(null), // add user_id from invite request token
+    role_id: ref(null),
 });
 
 const step1Errors = {
     name: ref(null),
     surname: ref(null),
     date_of_birth: ref(null),
+    role_id: ref(null),
 };
 
 const step2Errors = {
@@ -54,7 +56,11 @@ const register = async (e) => {
         return false;
     }
 
-    form.post('/register', {
+    let query = 'test';
+    if (window.location.href.split('/register?')[1] != undefined) {
+        query = '?' + window.location.href.split('/register?')[1];
+    }
+    form.post('/register' + query, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
@@ -174,8 +180,13 @@ function validateForm() {
 
     let select = x[currentTab].getElementsByTagName("select");
     let selectLabel = x[currentTab].getElementsByClassName("selectLabel");
-    if (select.length > 0 && form.security_type == null) {
+    if (select.length > 0 && form.security_type == null && currentStep.value == 2) {
         errors[currentStep.value][select[0].name].value = "Security type is required";
+        valid = false;
+        selectLabel[0].classList.add("before:border-rose-300", "after:border-rose-300");
+        select[0].classList.add("border-rose-300");
+    } else if (select.length > 0 && form.role_id == null && currentStep.value == 0) {
+        errors[currentStep.value][select[0].name].value = "Position is required";
         valid = false;
         selectLabel[0].classList.add("before:border-rose-300", "after:border-rose-300");
         select[0].classList.add("border-rose-300");
@@ -306,6 +317,16 @@ onMounted(() => {
                                                v-model="form.date_of_birth" />
                                         <span v-if="step1Errors.date_of_birth.value"
                                               class="text-rose-600">{{ step1Errors.date_of_birth.value }}</span>
+                                    </div>
+
+                                    <div class="relative">
+                                        <Select id="role_id"
+                                                name="role_id"
+                                                placeholder="Position"
+                                                :options="['Relative', 'Caregiver']"
+                                                v-model="form.role_id" />
+                                        <span v-if="step1Errors.role_id.value"
+                                              class="text-rose-600">{{ step1Errors.role_id.value }}</span>
                                     </div>
 
                                     <div class="flex flex-col items-center justify-center w-full"

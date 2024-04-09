@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\EmailConfirmationMail;
+use App\Mail\InvitationMail;
 use App\Mail\SendTwoFactorCode;
 use App\Models\EmailConfirmation;
 use Illuminate\Bus\Queueable;
@@ -46,6 +47,10 @@ class MailSender implements ShouldQueue
                 $this->emailConfirmation($this->data);
                 break;
 
+            case 'Invitation':
+                $this->sendInvitation($this->data);
+                break;
+
             default:
                 # code...
                 break;
@@ -64,5 +69,19 @@ class MailSender implements ShouldQueue
         ]);
 
         Mail::to($data['email'])->send(new EmailConfirmationMail($email->token));
+    }
+
+    /**
+     * Send invitation to another user.
+     *
+     * @param array $data The data to send
+     */
+    public function sendInvitation(array $data): void
+    {
+        $invitation = EmailConfirmation::create([
+            'token' => Crypt::encrypt($data['user_id']),
+        ]);
+
+        Mail::to($data['email'])->send(new InvitationMail($invitation->token, $data['full_name']));
     }
 }

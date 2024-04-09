@@ -58,6 +58,16 @@ function toggleDropdown() {
                     Dashboard
                     </Link>
                 </div>
+                <div v-if="auth.user.parent_user_id == null">
+                    <Link href="/invite">
+                    Invite others
+                    </Link>
+                </div>
+                <div>
+                    <Link href="/supervisors">
+                    Supervisors
+                    </Link>
+                </div>
                 <div>
                     <Link href="/settings">
                     Settings

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class UsersController extends Controller
@@ -51,7 +52,7 @@ class UsersController extends Controller
             $userFromDb = User::where('email', $data['email'])->first();
 
             if (!isset($userFromDb)) {
-                return back(400)->with('flash', [
+                return back()->with('flash', [
                     'type' => 'danger',
                     'message' => 'Email does not exist'
                 ]);
@@ -60,7 +61,7 @@ class UsersController extends Controller
             //check password
             if (!Hash::check($data['password'], $userFromDb->password)) {
                 // Invalid credentials
-                return back(400)->with('flash', [
+                return back()->with('flash', [
                     'type' => 'danger',
                     'message' => 'Invalid credentials. Please try again'
                 ]);
@@ -68,7 +69,7 @@ class UsersController extends Controller
 
             //user verified its account
             if (!$userFromDb->email_verified_at) {
-                return back(400)->with('flash', [
+                return back()->with('flash', [
                     'type' => 'danger',
                     'message' => 'Email not verified. Please check your email for verification'
                 ]);
@@ -141,23 +142,60 @@ class UsersController extends Controller
         return redirect()->route('login');
     }
 
-    public function register(Request $request)
+    public function register(Request $request, $token = null)
     {
         if ($request->isMethod('get')) {
             return Inertia::render('Authentication/Register');
         }
 
         if ($request->isMethod('post')) {
+            if (!empty(array_keys($request->query()))) {
+                $token = array_keys($request->query())[0];
+
+                //userris gali turet daug invited useriu, taciau invited useris gali turet tik viena parent useri
+                if (Auth::user() != null) {
+                    return redirect()->route('home')->with('flash', [
+                        'type' => 'warning',
+                        'message' => 'Please logout before starting registration.'
+                    ]);
+                }
+
+                $invitation = EmailConfirmation::where([
+                    ['token', '=', $token],
+                    ['is_confirmed', '=', 0]
+                ])->first();
+
+                if ($invitation == null) {
+                    return redirect()->route('login')->with('flash', [
+                        'type' => 'warning',
+                        'message' => 'Invitation does not exist.',
+                    ]);
+                }
+
+                try {
+                    $decryptedToken = Crypt::decrypt($invitation->token);
+                } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                    return redirect()->route('index')->with('flash', [
+                        'type' => 'danger',
+                        'message' => 'Could not find invitation. Please try again',
+                    ]); // Invalid or tampered token
+                }
+            }
+
             $data = $request->all();
             $content_type = !empty($request->file('profile_picture')) ? $request->file('profile_picture')->getMimeType() : null;
 
             if ($request->hasFile('profile_picture')) {
                 $data['profile_picture'] = "data:$content_type;base64," . base64_encode(file_get_contents($request->file('profile_picture')));
             }
-            $data['role_id'] = 1; //relative - family member
+            $data['role_id'] += 1; //relative - family member
+
+            if (isset($token)) {
+                $data['parent_user_id'] = $decryptedToken;
+            }
 
             if (User::where('email', $data['email'])->first() != null) {
-                return redirect()->route('register')->with('flash', [
+                return Redirect::to(isset($token) ? 'register?' . $token : 'register')->with('flash', [
                     'type' => 'danger',
                     'message' => 'Email already registered.'
                 ]);
@@ -169,6 +207,10 @@ class UsersController extends Controller
                     'email' => $data['email'],
                     'user_id' => $user->id
                 ]));
+            }
+
+            if (isset($token)) {
+                $invitation->confirm();
             }
 
             return redirect()->route('login')->with('flash', [
@@ -208,7 +250,7 @@ class UsersController extends Controller
         if ($emailConfirmation == null) {
             return redirect()->route('login')->with('flash', [
                 'type' => 'warning',
-                'message' => 'Token does not exist.',
+                'message' => 'Email confirmation does not exist.',
             ]);
         }
 
@@ -347,5 +389,68 @@ class UsersController extends Controller
             'type' => 'danger',
             'message' => 'Could not update profile picture. Please try again'
         ])->with('tab', 'profile');
+    }
+
+    public function changePhoneNumber(Request $request)
+    {
+        $user = $request->user();
+
+        $user->phone_number = $request->input('phone_number');
+
+        if ($user->save()) {
+            return redirect()->route('settings')->with('flash', [
+                'type' => 'success',
+                'message' => 'Phone number was updated successfully'
+            ])->with('tab', 'profile');
+        }
+
+        return redirect()->route('settings')->with('flash', [
+            'type' => 'danger',
+            'message' => 'Could not update phone number. Please try again'
+        ])->with('tab', 'profile');
+    }
+
+    public function invite(Request $request)
+    {
+        if ($request->user()->parent_user_id != null) {
+            return redirect()->route('index');
+        }
+        return Inertia::render('User/Invite');
+    }
+
+    public function sendInvitation(Request $request)
+    {
+        $user = $request->user();
+
+        $data = $request->all();
+        $existing_user = User::where('email', $data['email'])->first();
+
+        if (isset($existing_user)) {
+            return back()->with('flash', [
+                'type' => 'danger',
+                'message' => 'User already invited'
+            ]);
+        }
+
+        dispatch(new MailSender('Invitation', [
+            'email' => $data['email'],
+            'user_id' => $user->id,
+            'full_name' => $user->name . " " . $user->surname
+        ]));
+
+        return back()->with('flash', [
+            'type' => 'success',
+            'message' => 'Invitation sent successfully'
+        ]);
+    }
+
+    public function supervisors(Request $request)
+    {
+        $user = $request->user();
+        $group = DB::table('users')->where('id', '=', $user->id)->orWhere('parent_user_id', '=', $user->id)->get()->toArray();
+
+        return Inertia::render('User/Supervisors', [
+            'supervisors' => $group
+        ]);
     }
 }

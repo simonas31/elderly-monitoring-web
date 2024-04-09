@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\DevicesController;
 use App\Http\Controllers\UsersController;
+use App\Mail\InvitationMail;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -24,17 +27,14 @@ Route::get('/', function () {
 /**
  * Unauthenticated routes
  */
-Route::get('/pass', function () {
-    $user = User::find(1);
-
-    $user->password = "Simonas31";
-    $user->save();
-});
+Route::get('/test/{option?}', function () {
+    return Redirect::to('test?token123');
+})->name('test');
 Route::get('/confirm/{token}', [UsersController::class, 'confirmEmail'])->name('confirmEmail');
 Route::group(['middleware' => ['guest']], function () {
     Route::get('/', [UsersController::class, 'index'])->name('index');
 
-    Route::get('/register', [UsersController::class, 'register'])->name('register');
+    Route::get('/register/{token?}', [UsersController::class, 'register'])->name('register');
     Route::get('/login', [UsersController::class, 'login'])->name('login');
 
     Route::post('/register', [UsersController::class, 'register'])->name('register.post');
@@ -47,6 +47,8 @@ Route::group(['middleware' => ['guest']], function () {
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [UsersController::class, 'dashboard'])->name('dashboard');
     Route::get('/settings', [UsersController::class, 'settings'])->name('settings');
+    Route::get('/invite', [UsersController::class, 'invite'])->name('invite');
+    Route::get('/supervisors', [UsersController::class, 'supervisors'])->name('supervisors');
 
     Route::post('/logout', [UsersController::class, 'logout'])->name('logout');
     Route::post('/changeDeviceName', [DevicesController::class, 'changeDeviceName'])->name('changeDeviceName');
@@ -54,6 +56,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/changeSecurityType', [UsersController::class, 'changeSecurityType'])->name('changeSecurityType');
     Route::post('/toggleNotifications', [UsersController::class, 'toggleNotifications'])->name('toggleNotifications');
     Route::post('/changeProfilePicture', [UsersController::class, 'changeProfilePicture'])->name('changeProfilePicture');
+    Route::post('/changePhoneNumber', [UsersController::class, 'changePhoneNumber'])->name('changePhoneNumber');
+    Route::post('/sendInvitation', [UsersController::class, 'sendInvitation'])->name('sendInvitation');
     // //Folders
     // // Route::get('/', [FoldersController::class, 'index'])->name('folders');
     // Route::get('/folders/{folder_id}', [FoldersController::class, 'find'])->name('folders');

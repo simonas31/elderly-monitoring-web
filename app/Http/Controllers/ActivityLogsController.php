@@ -7,6 +7,7 @@ use App\Models\Device;
 use App\Models\User;
 use App\Notifications\SendFallAlertNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ActivityLogsController extends Controller
@@ -64,7 +65,7 @@ class ActivityLogsController extends Controller
             return response()->json(['Check if input data is filled correctly'], 406);
         }
 
-        $logs = ActivityLog::where('device_name', $request->input('device_name'))->get()->toArray();
+        $logs = DB::table('activity_logs')->where('device_name', '=', $request->input('device_name'))->get()->toArray();
 
         return response()->json($logs);
     }
