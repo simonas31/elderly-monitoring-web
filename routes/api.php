@@ -21,5 +21,5 @@ Route::post('registerDevice', [DevicesController::class, 'registerDevice']);
 Route::post('movementDetected', [ActivityLogsController::class, 'movementDetected']);
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('getStatistics', [ActivityLogsController::class, 'getStatistics']);
+    Route::get('getStatistics/{device_name}', [ActivityLogsController::class, 'getStatistics']);
 });

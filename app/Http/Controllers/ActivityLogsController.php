@@ -38,7 +38,7 @@ class ActivityLogsController extends Controller
             $user->notify(new SendFallAlertNotification());
 
             //find all other associated users with current user
-            $associated_users = User::where('user_id', $user->id)->get();
+            $associated_users = User::where('parent_user_id', $user->id)->get();
             foreach ($associated_users as $associated_user) {
                 $associated_user->notify(new SendFallAlertNotification());
             }
@@ -55,17 +55,11 @@ class ActivityLogsController extends Controller
     /**
      * Api get method that retrieves persons activity log information
      */
-    public function getStatistics(Request $request)
+    public function getStatistics(Request $request, $device_name)
     {
-        $validator = Validator::make($request->all(), [
-            'device_name' => 'required|string',
-        ]);
+        $device = Device::where('device_name', $device_name)->first();
 
-        if ($validator->fails()) {
-            return response()->json(['Check if input data is filled correctly'], 406);
-        }
-
-        $logs = DB::table('activity_logs')->where('device_name', '=', $request->input('device_name'))->get()->toArray();
+        $logs = DB::table('activity_logs')->where('device_id', '=', $device->id)->get()->toArray();
 
         return response()->json($logs);
     }

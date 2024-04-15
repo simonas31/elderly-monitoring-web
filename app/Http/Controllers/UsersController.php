@@ -220,12 +220,12 @@ class UsersController extends Controller
         }
     }
 
-    public function profile(Request $request)
-    {
-        return Inertia::render('User/Profile', [
-            'profile_picture' => User::select(DB::raw('TO_BASE64(profile_picture) as profile_picture'))->where('id', $request->user()->id)->first()->profile_picture,
-        ]);
-    }
+    // public function profile(Request $request)
+    // {
+    //     return Inertia::render('User/Profile', [
+    //         'profile_picture' => User::select(DB::raw('TO_BASE64(profile_picture) as profile_picture'))->where('id', $request->user()->id)->first()->profile_picture,
+    //     ]);
+    // }
 
     /**
      * Confirm email of user
@@ -236,7 +236,7 @@ class UsersController extends Controller
     {
         //user is logged in before email confirmation of another account
         if (Auth::user() != null) {
-            return redirect()->route('home')->with('flash', [
+            return redirect()->route('dashboard')->with('flash', [
                 'type' => 'warning',
                 'message' => 'Please logout before confirming email.'
             ]);
@@ -261,7 +261,7 @@ class UsersController extends Controller
         }
 
         //user is not logged in before email confirmation
-        $user = User::find($decryptedToken);
+        $user = User::where('id', $decryptedToken)->first();
 
         //user does not exist
         if ($user == null) {
@@ -280,8 +280,6 @@ class UsersController extends Controller
                 'message' => 'Email confirmation was successful.'
             ]
         );
-
-        return redirect()->route('login');
     }
 
     public function settings(Request $request)
@@ -342,24 +340,24 @@ class UsersController extends Controller
     /**
      * Toggle user notifications
      */
-    public function toggleNotifications(Request $request)
-    {
-        $user = $request->user();
+    // public function toggleNotifications(Request $request)
+    // {
+    //     $user = $request->user();
 
-        $user->fall_notifications = $request->input('fall_alert');
+    //     $user->fall_notifications = $request->input('fall_alert');
 
-        if ($user->save()) {
-            return redirect()->route('settings')->with('flash', [
-                'type' => 'success',
-                'message' => 'Notifications were updated successfully'
-            ])->with('tab', 'notifications');
-        }
+    //     if ($user->save()) {
+    //         return redirect()->route('settings')->with('flash', [
+    //             'type' => 'success',
+    //             'message' => 'Notifications were updated successfully'
+    //         ])->with('tab', 'notifications');
+    //     }
 
-        return redirect()->route('settings')->with('flash', [
-            'type' => 'danger',
-            'message' => 'Could not update notifications. Please try again'
-        ])->with('tab', 'notifications');
-    }
+    // return redirect()->route('settings')->with('flash', [
+    //     'type' => 'danger',
+    //     'message' => 'Could not update notifications. Please try again'
+    // ])->with('tab', 'notifications');
+    // }
 
     public function changeProfilePicture(Request $request)
     {

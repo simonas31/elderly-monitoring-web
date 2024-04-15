@@ -70,7 +70,7 @@ class DevicesController extends Controller
             ]);
         }
 
-        $device->custom_device_name = $request->input('device_name');
+        $device->custom_device_name = $request->input('new_device_name');
         if ($device->save()) {
             return redirect()->route('dashboard')->with('flash', [
                 'type' => 'success',

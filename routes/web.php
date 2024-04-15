@@ -4,6 +4,7 @@ use App\Http\Controllers\DevicesController;
 use App\Http\Controllers\UsersController;
 use App\Mail\InvitationMail;
 use App\Models\User;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
@@ -20,10 +21,9 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Index');
+Route::get('/testas', function () {
+    return Crypt::encrypt(1);
 });
-
 /**
  * Unauthenticated routes
  */
