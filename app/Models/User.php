@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -110,8 +111,18 @@ class User extends Authenticatable
         }
     }
 
-    public function routeNotificationForVonage($notification)
+    /**
+     * Send SMS message
+     */
+    public function sendSMS($text)
     {
-        return $this->phone_number;
+        $client = new \Vonage\Client(new \Vonage\Client\Credentials\Basic(env('VONAGE_KEY'), env('VONAGE_SECRET')));
+
+        //trim phone number
+        $phone = str_replace([' ', '+', '(', ')'], '', $this->phone_number);
+
+        $client->sms()->send(
+            new \Vonage\SMS\Message\SMS($phone, "Elder Watch", $text)
+        );
     }
 }

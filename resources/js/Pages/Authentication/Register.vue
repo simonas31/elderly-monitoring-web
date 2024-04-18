@@ -1,7 +1,9 @@
 <script setup>
-import { Link, useForm } from "@inertiajs/vue3";
+import { router, useForm } from "@inertiajs/vue3";
 import { ref, watch, onMounted } from "vue";
 import { ArrowLongRightIcon, ArrowLongLeftIcon } from "@heroicons/vue/20/solid";
+
+const roles = ['Relative', 'Caregiver'];
 
 const form = useForm({
     name: ref(null),
@@ -56,7 +58,7 @@ const register = async (e) => {
         return false;
     }
 
-    let query = 'test';
+    let query = '';
     if (window.location.href.split('/register?')[1] != undefined) {
         query = '?' + window.location.href.split('/register?')[1];
     }
@@ -254,8 +256,27 @@ function fixStepIndicator(n) {
     x[n].className += " active";
 }
 
+const prefilled = ref(false);
+
 onMounted(() => {
     showTab(currentStep.value);
+
+    if (window.location.href.split('/register?')[1] != undefined) {
+        axios.post('/api/decrypt', {
+            encryptedData: window.location.href.split('/register?')[1]
+        })
+            .then(response => {
+                const decryptedData = response.data.decryptedData;
+                prefilled.value = true;
+                form.email = decryptedData.email;
+                form.role_id = decryptedData.invited_user_role_id;
+                form.name = decryptedData.invited_user_name;
+                form.surname = decryptedData.invited_user_surname;
+            })
+            .catch(error => {
+                // router.visit('/');
+            });
+    }
 })
 
 </script>
@@ -293,7 +314,8 @@ onMounted(() => {
                                                name="name"
                                                type="text"
                                                placeholder="First Name"
-                                               v-model="form.firstname" />
+                                               v-model="form.name"
+                                               :customClasses="prefilled ? 'disabled pointer-events-none' : ''" />
                                         <span v-if="step1Errors.name.value"
                                               class="text-rose-600">{{ step1Errors.name.value }}</span>
                                     </div>
@@ -303,7 +325,8 @@ onMounted(() => {
                                                name="surname"
                                                type="text"
                                                placeholder="Last Name"
-                                               v-model="form.lastname" />
+                                               v-model="form.surname"
+                                               :customClasses="prefilled ? 'disabled pointer-events-none' : ''" />
                                         <span v-if="step1Errors.surname.value"
                                               class="text-rose-600">{{ step1Errors.surname.value }}</span>
                                     </div>
@@ -318,13 +341,15 @@ onMounted(() => {
                                         <span v-if="step1Errors.date_of_birth.value"
                                               class="text-rose-600">{{ step1Errors.date_of_birth.value }}</span>
                                     </div>
-
+                                    labas
+                                    {{ form.name }}
                                     <div class="relative">
                                         <Select id="role_id"
                                                 name="role_id"
                                                 placeholder="Position"
-                                                :options="['Relative', 'Caregiver']"
-                                                v-model="form.role_id" />
+                                                :options="roles"
+                                                v-model="form.role_id"
+                                                :customClasses="prefilled ? 'disabled pointer-events-none' : ''" />
                                         <span v-if="step1Errors.role_id.value"
                                               class="text-rose-600">{{ step1Errors.role_id.value }}</span>
                                     </div>
@@ -335,7 +360,7 @@ onMounted(() => {
                                          @drop.prevent="onDrop">
                                         <span class="">Profile picture (optional)</span>
                                         <label for="dropzone-file"
-                                               class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                               class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white dark:hover:bg-bray-80 hover:bg-gray-100">
                                             <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                                 <svg v-if="!isDropping && !dropped"
                                                      class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
@@ -412,6 +437,7 @@ onMounted(() => {
                                                name="email"
                                                type="text"
                                                placeholder="Email"
+                                               :customClasses="prefilled ? 'disabled pointer-events-none' : ''"
                                                v-model="form.email" />
                                         <span v-if="step2Errors.email.value"
                                               class="text-rose-600">{{ step2Errors.email.value }}</span>

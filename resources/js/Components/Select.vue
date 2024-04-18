@@ -22,10 +22,11 @@ const props = defineProps({
 })
 
 const inputClass = computed(() => {
+    //border-t-transparent
     return cva("", {
         variants: {
             type: {
-                select: "peer h-full w-full border border-t-transparent border-2 border-gray-300 px-3 py-2.5 text-sm sm:text-base text-blue-gray-700 transition-all focus:border-2 focus:border-primary-600 focus:border-t-transparent focus:outline-0"
+                select: "peer h-full w-full border border-t-white focus:border-t-white border-2 border-gray-300 px-3 py-2.5 text-sm sm:text-base text-blue-gray-700 transition-all focus:border-2 focus:border-primary-600 focus:border-t-transparent focus:outline-0"
             }
         }
     })({

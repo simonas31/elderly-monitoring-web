@@ -89,7 +89,7 @@ class UsersController extends Controller
                 if ($userFromDb->security_type == 1) {
                     $userFromDb->notify(new SendTwoFactorCodeEmail());
                 } else {
-                    $userFromDb->notify(new SendTwoFactorCodeSMS());
+                    $userFromDb->sendSMS('Your two-factor code: ' . $userFromDb->two_factor_code);
                 }
                 return back()->with('flash', [
                     'type' => 'info',
@@ -109,7 +109,7 @@ class UsersController extends Controller
                 if ($userFromDb->security_type == 1) {
                     $userFromDb->notify(new SendTwoFactorCodeEmail());
                 } else {
-                    $userFromDb->notify(new SendTwoFactorCodeSMS());
+                    $userFromDb->sendSMS('Your two-factor code: ' . $userFromDb->two_factor_code);
                 }
                 return back()->with('flash', [
                     'type' => 'danger',
@@ -432,6 +432,9 @@ class UsersController extends Controller
 
         dispatch(new MailSender('Invitation', [
             'email' => $data['email'],
+            'invited_user_name' => $data['name'],
+            'invited_user_surname' => $data['surname'],
+            'invited_user_role_id' => $data['role_id'],
             'user_id' => $user->id,
             'full_name' => $user->name . " " . $user->surname
         ]));
@@ -450,5 +453,53 @@ class UsersController extends Controller
         return Inertia::render('User/Supervisors', [
             'supervisors' => $group
         ]);
+    }
+
+    public function deleteUser(Request $request)
+    {
+        $user_id = $request->get('user_id');
+        if ($user_id == null) {
+            return back()->with('flash', [
+                'type' => 'danger',
+                'message' => 'User could not be found'
+            ]);
+        }
+
+        $userToDelete = User::all()->where('id', '=', $user_id)->first();
+
+        if (!isset($userToDelete)) {
+            return back()->with('flash', [
+                'type' => 'danger',
+                'message' => 'User could not be deleted'
+            ]);
+        }
+
+        //make first child as parent
+        $users = DB::table('users')->where('parent_user_id', '=', $user_id)->get()->toArray();
+        $parentUser = null;
+        foreach ($users as $key => $user) {
+            if ($key == 0) {
+                $parentUser = $user->id;
+                $user->parent_user_id = null;
+                $user->save();
+            } else {
+                $user->parent_user_id = $parentUser;
+                $user->save();
+            }
+        }
+
+        $userToDelete->delete();
+
+        return back()->with('flash', [
+            'type' => 'success',
+            'message' => 'User deleted successfully'
+        ]);
+    }
+
+    public function decrypt(Request $request)
+    {
+        $encryptedData = $request->input('encryptedData');
+        $decryptedData = Crypt::decrypt($encryptedData);
+        return response()->json(['decryptedData' => $decryptedData]);
     }
 }

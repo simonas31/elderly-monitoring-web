@@ -61,7 +61,7 @@ const labelClass = computed(() => {
            :placeholder="props.placeholder"
            v-model="model" />
     <label :for="props.name"
-           :class="labelClass">
+           :class="[labelClass, props.customClasses]">
         <slot />
         {{ props.placeholder }}
     </label>

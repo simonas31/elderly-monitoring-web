@@ -72,22 +72,6 @@ const login = async () => {
                                                class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">2FA
                                             code</label>
                                     </div>
-                                    <div class="relative">
-                                        <div class="fill justify-between items-center mt-8 flex text-sm sm:text-base">
-                                            <div class="block">
-                                                <label for="rememberMe"
-                                                       class="checkbox-container">
-                                                    <input type="checkbox"
-                                                           id="rememberMe"
-                                                           name="rememberMe"
-                                                           v-model="form.remember" />
-                                                    <span class="checkmark"></span>
-                                                    <p>Remember me</p>
-                                                </label>
-                                            </div>
-                                            <Link href="/forgot-password">Forgot password?</Link>
-                                        </div>
-                                    </div>
                                     <div class="relative text-center pt-3">
                                         <Button intent="primary"
                                                 type="submit"

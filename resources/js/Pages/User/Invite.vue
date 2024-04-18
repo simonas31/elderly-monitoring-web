@@ -5,10 +5,16 @@ import { PaperAirplaneIcon } from "@heroicons/vue/20/solid";
 
 const form = useForm({
     email: ref(null),
+    name: ref(null),
+    surname: ref(null),
+    role_id: ref(null),
 });
 
 const formErrors = {
     email: ref(null),
+    name: ref(null),
+    surname: ref(null),
+    role_id: ref(null),
 }
 
 const invite = () => {
@@ -18,6 +24,27 @@ const invite = () => {
         return;
     } else {
         formErrors.email.value = null;
+    }
+
+    if (form.name == null) {
+        formErrors.name.value = "Please enter invited person's name";
+        return;
+    } else {
+        formErrors.name.value = null;
+    }
+
+    if (form.surname == null) {
+        formErrors.surname.value = "Please enter invited person's surname";
+        return;
+    } else {
+        formErrors.surname.value = null;
+    }
+
+    if (form.role_id == null) {
+        formErrors.role_id.value = "Please select invited person's role";
+        return;
+    } else {
+        formErrors.role_id.value = null;
     }
 
     form.post('/sendInvitation');
@@ -45,6 +72,43 @@ const invite = () => {
                                 <p class="text-center">
                                     <span v-if="formErrors.email.value"
                                           class="text-rose-600">{{ formErrors.email.value }}</span>
+                                </p>
+                            </div>
+                            <div class="relative mt-5 w-[250px] sm:w-[300px]">
+                                <Input autocomplete="off"
+                                       id="name"
+                                       name="name"
+                                       type="text"
+                                       placeholder="Name"
+                                       :customClasses="'max-w-[400px]'"
+                                       v-model="form.name" />
+                                <p class="text-center">
+                                    <span v-if="formErrors.name.value"
+                                          class="text-rose-600">{{ formErrors.name.value }}</span>
+                                </p>
+                            </div>
+                            <div class="relative mt-5 w-[250px] sm:w-[300px]">
+                                <Input autocomplete="off"
+                                       id="surname"
+                                       name="surname"
+                                       type="text"
+                                       placeholder="Surname"
+                                       :customClasses="'max-w-[400px]'"
+                                       v-model="form.surname" />
+                                <p class="text-center">
+                                    <span v-if="formErrors.surname.value"
+                                          class="text-rose-600">{{ formErrors.surname.value }}</span>
+                                </p>
+                            </div>
+                            <div class="relative mt-5 w-[250px] sm:w-[300px]">
+                                <Select id="role_id"
+                                        name="role_id"
+                                        placeholder="Position"
+                                        :options="['Relative', 'Caregiver']"
+                                        v-model="form.role_id" />
+                                <p class="text-center">
+                                    <span v-if="formErrors.role_id.value"
+                                          class="text-rose-600">{{ formErrors.role_id.value }}</span>
                                 </p>
                             </div>
                             <div class="mx-auto mt-5">

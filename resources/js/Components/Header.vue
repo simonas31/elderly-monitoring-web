@@ -49,7 +49,7 @@ function toggleDropdown() {
             <div class="">{{ props.auth.user.name + " " + props.auth.user.surname }}</div>
             <div class="sm:scale-100 w-9 h-9">
                 <img class="rounded-full sm:scale-100 object-cover w-9 h-9"
-                     :src="props.auth ? props.auth.user['profile_picture'] : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'">
+                     :src="props.auth.user.profile_picture ? props.auth.user['profile_picture'] : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'">
             </div>
             <div
                  :class="'rounded transition-all border-gray-300 bg-white p-4 absolute top-[50px] right-0 w-[200px] shadow-lg space-y-2 z-50 ' + (dropdown ? '' : 'hidden')">
@@ -65,7 +65,7 @@ function toggleDropdown() {
                 </div>
                 <div>
                     <Link href="/supervisors">
-                    Supervisors
+                    {{ props.auth.user.role_id == 1 ? "Users" : "Supervisors" }}
                     </Link>
                 </div>
                 <div>

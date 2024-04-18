@@ -21,8 +21,18 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/testas', function () {
-    return Crypt::encrypt(1);
+Route::get('/test', function () {
+
+    $data = [
+        'email' => 'naujass12@gmail.com',
+        'invited_user_name' => 'Naujas',
+        'invited_user_surname' => 'Naujauskas',
+        'invited_user_role_id' => 0,
+        'user_id' => 1,
+        'full_name' => "Simonas" . " " . 'Babarskas'
+    ];
+
+    return Crypt::encrypt($data);
 });
 /**
  * Unauthenticated routes
@@ -58,6 +68,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/changeProfilePicture', [UsersController::class, 'changeProfilePicture'])->name('changeProfilePicture');
     Route::post('/changePhoneNumber', [UsersController::class, 'changePhoneNumber'])->name('changePhoneNumber');
     Route::post('/sendInvitation', [UsersController::class, 'sendInvitation'])->name('sendInvitation');
+    Route::post('/deleteUser', [UsersController::class, 'deleteUser'])->name('deleteUser');
     // //Folders
     // // Route::get('/', [FoldersController::class, 'index'])->name('folders');
     // Route::get('/folders/{folder_id}', [FoldersController::class, 'find'])->name('folders');
@@ -71,4 +82,8 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::delete('/files/{file_id}', [FilesController::class, 'destroy'])->name('files.delete');
 
     // Route::get('/profile', [UsersController::class, 'profile'])->name('user.profile');
+});
+
+Route::get('{slug}', function () {
+    return redirect('/');
 });

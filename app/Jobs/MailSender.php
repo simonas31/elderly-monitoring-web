@@ -79,7 +79,7 @@ class MailSender implements ShouldQueue
     public function sendInvitation(array $data): void
     {
         $invitation = EmailConfirmation::create([
-            'token' => Crypt::encrypt($data['user_id']),
+            'token' => Crypt::encrypt($data),
         ]);
 
         Mail::to($data['email'])->send(new InvitationMail($invitation->token, $data['full_name']));

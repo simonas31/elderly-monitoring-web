@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\ActivityLog;
 use App\Models\Device;
 use App\Models\User;
-use App\Notifications\SendFallAlertNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -34,13 +33,13 @@ class ActivityLogsController extends Controller
 
         //notify the user that person fell
         if ($request->input('fell')) {
-            $user = User::find($device->user_id);
-            $user->notify(new SendFallAlertNotification());
+            $user = User::all()->find('id', $device->user_id)->first();
+            $user->sendSMS('Fall detected. Please check up on elder.');
 
             //find all other associated users with current user
-            $associated_users = User::where('parent_user_id', $user->id)->get();
+            $associated_users = User::all()->where('parent_user_id', '=', $user->id)->toArray();
             foreach ($associated_users as $associated_user) {
-                $associated_user->notify(new SendFallAlertNotification());
+                $associated_user->sendSMS('Fall detected. Please check up on elder.');
             }
         }
 

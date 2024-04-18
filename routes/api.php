@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActivityLogsController;
 use App\Http\Controllers\DevicesController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 //pridet access token?
 Route::post('registerDevice', [DevicesController::class, 'registerDevice']);
 Route::post('movementDetected', [ActivityLogsController::class, 'movementDetected']);
+Route::post('decrypt', [UsersController::class, 'decrypt']);
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('getStatistics/{device_name}', [ActivityLogsController::class, 'getStatistics']);
