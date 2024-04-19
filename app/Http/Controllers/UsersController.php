@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\MailSender;
+use App\Models\ActivityLog;
 use App\Models\Device;
 use App\Models\EmailConfirmation;
 use App\Models\User;
@@ -26,20 +27,8 @@ class UsersController extends Controller
         return Inertia::render("Index");
     }
 
-    public function dashboard(Request $request)
+    public function getVideosFromBucket($device_name)
     {
-        //get all devices
-        $user = $request->user();
-        $devices = Device::where(function ($query) use ($user) {
-            $query->where('user_id', '=', $user->id)
-                ->orWhere('user_id', '=', $user->parent_user_id);
-        })->get()->toArray();
-
-        if (empty($devices)) {
-            return Inertia::render('User/Dashboard');
-        }
-
-
         //pass custom parameters to page
         $storage = new StorageClient([
             'keyFilePath' => storage_path('credentials/' . env('GCS_CREDENTIALS'))
@@ -49,7 +38,7 @@ class UsersController extends Controller
         $videos = [];
 
         $objects = $bucket->objects([
-            'prefix' => $devices[0]['device_name'] . '/videos/'
+            'prefix' => $device_name . '/videos/'
         ]);
 
         foreach ($objects as $object) {
@@ -63,9 +52,60 @@ class UsersController extends Controller
             }
         }
 
+        return $videos;
+    }
+
+    public function dashboard(Request $request)
+    {
+        $user = $request->user();
+
+        //get all devices
+        $devices = Device::where(function ($query) use ($user) {
+            $query->where('user_id', '=', $user->id)
+                ->orWhere('user_id', '=', $user->parent_user_id);
+        })->get()->toArray();
+
+        if (empty($devices)) {
+            return Inertia::render('User/Dashboard');
+        }
+
+
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+
+            $videos = $this->getVideosFromBucket($data['device_name']);
+            $deviceTemp = Device::where('device_name', '=', $data['device_name'])->first();
+
+            $logs = [
+                'hours' => [],
+                'days' => [],
+                'months' => []
+            ];
+            if (isset($deviceTemp)) {
+                $logs['hours'] = ActivityLog::getActivityLogsGroupedByHour($deviceTemp->id);
+                $logs['days'] = ActivityLog::getActivityLogsGroupedByDay($deviceTemp->id);
+                $logs['months'] = ActivityLog::getActivityLogsGroupedByMonth($deviceTemp->id);
+            }
+
+            return Inertia::render('User/Dashboard', [
+                'videos' => $videos,
+                'devices' => $devices,
+                'logs' => $logs,
+                'selectedDevice' => $data['device_name']
+            ]);
+        }
+
+        $videos = $this->getVideosFromBucket($devices[0]['device_name']);
+        $logs = [
+            'hours' => ActivityLog::getActivityLogsGroupedByHour($devices[0]['id']),
+            'days' => ActivityLog::getActivityLogsGroupedByDay($devices[0]['id']),
+            'months' => ActivityLog::getActivityLogsGroupedByMonth($devices[0]['id'])
+        ];
+
         return Inertia::render('User/Dashboard', [
             'videos' => $videos,
-            'devices' => $devices
+            'devices' => $devices,
+            'logs' => $logs,
         ]);
     }
 

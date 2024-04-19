@@ -19,6 +19,8 @@
         "@vitejs/plugin-vue": "^5.0.4",
         "@vueuse/components": "^10.9.0",
         "@vueuse/core": "^10.9.0",
-        "class-variance-authority": "^0.7.0"
+        "chart.js": "^4.4.2",
+        "class-variance-authority": "^0.7.0",
+        "vue-chartjs": "^5.3.1"
     }
 }

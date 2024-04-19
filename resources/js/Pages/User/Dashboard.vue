@@ -1,16 +1,19 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import { useForm } from '@inertiajs/vue3'
+import { ref, onMounted, watch } from "vue";
+import { useForm, router } from '@inertiajs/vue3'
 
-const props = defineProps(['videos', 'devices']);
+const props = defineProps(['videos', 'devices', 'selectedDevice', 'logs']);
 
 const changeDeviceNameForm = useForm({
     device_name: ref(null),
     new_device_name: ref(null),
 });
 
+const changeDeviceNameErorrs = ref(null);
+
 const devicesList = ref([]);
 const showVideoModal = ref(false);
+const showDeviceNameChangeModal = ref(false);
 const videoUrl = ref(null);
 const videoName = ref(null);
 
@@ -21,16 +24,42 @@ const toggleVideoModal = (url, name) => {
 };
 
 const onDeviceChange = () => {
-    console.log(changeDeviceNameForm.device_name);
-    
-    // changeDeviceNameForm.post('/changeDeviceName');
+    changeDeviceNameForm.post('/dashboard');
 };
+
+const changeDeviceNameSubmit = () => {
+    if (changeDeviceNameForm.new_device_name == null) {
+        changeDeviceNameErorrs.value = "Device name is required";
+        return;
+    } else {
+        changeDeviceNameErorrs.value = null;
+    }
+
+    showDeviceNameChangeModal.value = false;
+    changeDeviceNameForm.post('/changeDeviceName', {
+        onSuccess: (response) => {
+            router.visit('/dashboard');
+        }
+    });
+};
+
+watch(() => props.selectedDevice, (newSelectedDevice) => {
+    changeDeviceNameForm.device_name = newSelectedDevice;
+    const found = devicesList.value.find(element => element.value == props.selectedDevice);
+    if (found != undefined) {
+        changeDeviceNameForm.new_device_name = found.label;
+    }
+});
 
 onMounted(() => {
     props.devices.forEach(element => {
         devicesList.value.push({ value: element.device_name, label: element.custom_device_name });
     });
-    devicesList.value.push({ value: 'EW123123123', label: 'EW123123123' });
+
+    if (devicesList.value.length > 0) {
+        changeDeviceNameForm.device_name = devicesList.value[0].value;
+        changeDeviceNameForm.new_device_name = devicesList.value[0].label;
+    }
 });
 
 //watch changes of devices select
@@ -60,6 +89,12 @@ onMounted(() => {
                                     Devices
                                 </label>
                             </div>
+                            <div class="text-center pb-5">
+                                <Button intent="primary"
+                                        @click="showDeviceNameChangeModal = true">
+                                    Change Device Name
+                                </Button>
+                            </div>
                             <p class="pl-2 pb-1 text-center">Device Captured Videos</p>
                             <div class="max-h-[200px] min-w-[300px] overflow-auto bg-white rounded px-4 py-2">
                                 <div v-for="video in props.videos"
@@ -76,21 +111,40 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-        <Modal :title="'Rename'"
+        <Modal :title="'Video playback'"
                :show="showVideoModal"
                @close-modal="showVideoModal = false">
             <div class="p-4 md:p-5 text-black">
-                <form @submit.prevent="rename()"
-                      class="mx-auto">
-                    <div class="mb-4">
-                        <video width="640"
-                               height="480"
-                               controls>
-                            <source :src="videoUrl"
-                                    type='video/mp4' />
-                        </video>
-                    </div>
-                </form>
+                <div class="mb-4">
+                    <video width="640"
+                           height="480"
+                           controls>
+                        <source :src="videoUrl"
+                                type='video/mp4' />
+                    </video>
+                </div>
+            </div>
+        </Modal>
+        <Modal :title="'Change current device name'"
+               :show="showDeviceNameChangeModal"
+               @close-modal="showDeviceNameChangeModal = false">
+            <div class="p-4 md:p-5 text-black">
+                <div class="relative mb-4">
+                    <Input autocomplete="off"
+                           id="new_device_name"
+                           name="new_device_name"
+                           type="text"
+                           placeholder="New device name"
+                           v-model="changeDeviceNameForm.new_device_name"></Input>
+                    <span v-if="changeDeviceNameErorrs"
+                          class="text-rose-600">{{ changeDeviceNameErorrs }}</span>
+                </div>
+                <div>
+                    <Button intent="primary"
+                            @click="changeDeviceNameSubmit">
+                        Change Device Name
+                    </Button>
+                </div>
             </div>
         </Modal>
     </Layout>
@@ -98,8 +152,10 @@ onMounted(() => {
 <script>
 import Layout from '@Layouts/Layout.vue';
 import Modal from "@Components/Modal.vue";
+import Button from '@Components/Button.vue';
+import Input from '@Components/Input.vue';
 
 export default {
-    components: { Layout, Modal },
+    components: { Layout, Modal, Button, Input },
 }
 </script>

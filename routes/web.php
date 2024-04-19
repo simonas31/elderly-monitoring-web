@@ -44,6 +44,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/settings', [UsersController::class, 'settings'])->name('settings');
     Route::get('/invite', [UsersController::class, 'invite'])->name('invite');
     Route::get('/supervisors', [UsersController::class, 'supervisors'])->name('supervisors');
+    Route::post('/dashboard', [UsersController::class, 'dashboard'])->name('findDevice');
     Route::get('/devices', [DevicesController::class, 'devices'])->name('devices');
 
     Route::post('/logout', [UsersController::class, 'logout'])->name('logout');

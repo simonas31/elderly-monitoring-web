@@ -115,7 +115,8 @@ function toggleDropdown() {
         </div>
         <Slidedown :show="showSlidedown"
                    @close-slidedown="showSlidedown = false"
-                   @logout="logout" />
+                   @logout="logout"
+                   :user="props.auth.user" />
     </header>
 </template>
 <script>
