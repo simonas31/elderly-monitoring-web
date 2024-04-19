@@ -40,6 +40,7 @@ class EmailConfirmationMail extends Mailable
     public function content(): Content
     {
         return new Content(
+            markdown: 'mails.confirmEmail',
             view: 'mails.confirmEmail',
             with: ['token' => $this->token],
         );

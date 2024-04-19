@@ -1,11 +1,13 @@
-@extends('layouts.mail')
-
-@section('title', 'Welcome Email')
-
-@section('content')
-    <div class="text-center bg-white mx-auto" style="width: 400px;margin: 10px auto 12px auto; padding: 10px">
-        <h1 class="text-3xl mb-3">You were invited by: {{ $sender_name }}</h1>
-        <p class="mb-3">To confirm your invitation please <a class="underline"
-                href="{{ route('register', ['token' => $token], true) }}">register</a> to our platform.</p>
+@component('vendor.mail.html.message')
+    <div class="" style="width: 600px; padding: 10px">
+        <h1 style="text-align: center">You were invited to Elder Watch by: {{ $sender_name }}</h1>
+        <p style="text-align: center;padding-top: 10px">To activate your account, press the button below to continue your
+            registration process.</p>
     </div>
-@endsection
+    @component('vendor.mail.html.button', [
+        'url' => route('register', ['token' => $token], true),
+        'color' => 'rgb(82 173 94)',
+    ])
+        Register
+    @endcomponent
+@endcomponent

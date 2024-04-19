@@ -42,6 +42,7 @@ class InvitationMail extends Mailable
     public function content(): Content
     {
         return new Content(
+            markdown: 'mails.invitationMail',
             view: 'mails.invitationMail',
             with: ['token' => $this->token, 'sender_name' => $this->sender_name],
         );

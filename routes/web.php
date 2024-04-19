@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DevicesController;
 use App\Http\Controllers\UsersController;
+use App\Mail\EmailConfirmationMail;
 use App\Mail\InvitationMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
@@ -21,25 +22,9 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/test', function () {
-
-    $data = [
-        'email' => 'naujass12@gmail.com',
-        'invited_user_name' => 'Naujas',
-        'invited_user_surname' => 'Naujauskas',
-        'invited_user_role_id' => 0,
-        'user_id' => 1,
-        'full_name' => "Simonas" . " " . 'Babarskas'
-    ];
-
-    return Crypt::encrypt($data);
-});
 /**
  * Unauthenticated routes
  */
-Route::get('/test/{option?}', function () {
-    return Redirect::to('test?token123');
-})->name('test');
 Route::get('/confirm/{token}', [UsersController::class, 'confirmEmail'])->name('confirmEmail');
 Route::group(['middleware' => ['guest']], function () {
     Route::get('/', [UsersController::class, 'index'])->name('index');
