@@ -54,7 +54,8 @@ const labelClass = computed(() => {
             :name="props.name"
             v-model="model">
         <option v-for="(option, index) in props.options"
-                :value="index"
+                :key="index"
+                :value="option"
                 :selected="index == 0">{{ option }}
         </option>
     </select>

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
 
 class DevicesController extends Controller
 {
@@ -81,6 +82,15 @@ class DevicesController extends Controller
         return redirect()->route('dashboard')->with('flash', [
             'type' => 'danger',
             'message' => 'Could not save new device name. Please try again.'
+        ]);
+    }
+
+    public function devices(Request $request)
+    {
+        $devices = Device::all()->toArray();
+
+        return Inertia::render('Devices/AllDevices', [
+            'devices' => $devices,
         ]);
     }
 }

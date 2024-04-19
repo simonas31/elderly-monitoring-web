@@ -17,6 +17,8 @@
         "@heroicons/vue": "^2.1.1",
         "@inertiajs/vue3": "^1.0.15",
         "@vitejs/plugin-vue": "^5.0.4",
+        "@vueuse/components": "^10.9.0",
+        "@vueuse/core": "^10.9.0",
         "class-variance-authority": "^0.7.0"
     }
 }

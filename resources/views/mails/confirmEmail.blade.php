@@ -7,6 +7,6 @@
         'url' => route('confirmEmail', $token, true),
         'color' => 'rgb(82 173 94)',
     ])
-        Active Account
+        Activate Account
     @endcomponent
 @endcomponent

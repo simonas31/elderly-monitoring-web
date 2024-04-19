@@ -14,6 +14,7 @@
 
 <body>
     @inertia
+    <div id="modals" class="relative z-10k"></div>
 </body>
 @vite('resources/js/app.js')
 

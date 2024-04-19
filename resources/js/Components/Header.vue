@@ -58,6 +58,11 @@ function toggleDropdown() {
                     Dashboard
                     </Link>
                 </div>
+                <div v-if="auth.user.role_id == 1">
+                    <Link href="/devices">
+                    Devices
+                    </Link>
+                </div>
                 <div v-if="auth.user.parent_user_id == null">
                     <Link href="/invite">
                     Invite others

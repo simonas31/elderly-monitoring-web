@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\MailSender;
+use App\Models\Device;
 use App\Models\EmailConfirmation;
 use App\Models\User;
 use App\Notifications\SendTwoFactorCodeEmail;
 use App\Notifications\SendTwoFactorCodeSMS;
 use Carbon\Carbon;
+use Google\Cloud\Storage\StorageClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -26,8 +28,53 @@ class UsersController extends Controller
 
     public function dashboard(Request $request)
     {
+        //get all devices
+        $user = $request->user();
+        $devices = Device::where(function ($query) use ($user) {
+            $query->where('user_id', '=', $user->id)
+                ->orWhere('user_id', '=', $user->parent_user_id);
+        })->get()->toArray();
+
+        if (empty($devices)) {
+            return Inertia::render('User/Dashboard');
+        }
+
+
         //pass custom parameters to page
-        return Inertia::render('User/Dashboard');
+        $storage = new StorageClient([
+            'keyFilePath' => storage_path('credentials/' . env('GCS_CREDENTIALS'))
+        ]);
+
+        $bucket = $storage->bucket(env('GCS_BUCKET'));
+        $videos = [];
+
+        $objects = $bucket->objects([
+            'prefix' => $devices[0]['device_name'] . '/videos/'
+        ]);
+
+        foreach ($objects as $object) {
+            // Assuming you want to fetch all video files
+            if (strpos($object->name(), '.mp4') !== false) {
+                $filename = $this->formatFileName($object->name());
+                $videos[] = [
+                    'name' => $filename,
+                    'url' => $object->signedUrl(time() + 3600), // Generating signed URL
+                ];
+            }
+        }
+
+        return Inertia::render('User/Dashboard', [
+            'videos' => $videos,
+            'devices' => $devices
+        ]);
+    }
+
+    private function formatFileName($filename)
+    {
+        $formattedVideoName = explode('_', $filename);
+        $firstPart = explode('/', $formattedVideoName[0]);
+
+        return $firstPart[2] . ' ' . implode(':', explode('-', $formattedVideoName[1]));
     }
 
     /**
