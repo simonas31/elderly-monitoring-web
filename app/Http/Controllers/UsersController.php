@@ -30,6 +30,10 @@ class UsersController extends Controller
     public function getVideosFromBucket($device_name)
     {
         //pass custom parameters to page
+        if(empty(env('GCS_CREDENTIALS'))){
+            return [];
+        }
+
         $storage = new StorageClient([
             'keyFilePath' => storage_path('credentials/' . env('GCS_CREDENTIALS'))
         ]);
@@ -275,7 +279,12 @@ class UsersController extends Controller
             if ($request->hasFile('profile_picture')) {
                 $data['profile_picture'] = "data:$content_type;base64," . base64_encode(file_get_contents($request->file('profile_picture')));
             }
-            $data['role_id'] += 1; //relative - family member
+
+            if($data['role_id'] == 'Relative'){
+                $data['role_id'] = 2;
+            } else if($data['role_id'] == 'Caregiver') {
+                $data['role_id'] = 3;
+            }
 
             if (isset($token)) {
                 $data['parent_user_id'] = $decryptedToken;
@@ -288,13 +297,19 @@ class UsersController extends Controller
                 ]);
             }
 
-            $user = User::create($data);
-            if ($user) {
-                dispatch(new MailSender('EmailConfirmation', [
-                    'email' => $data['email'],
-                    'user_id' => $user->id
-                ]));
+            if($data['security_type'] == 'None'){
+                $data['security_type'] = 0;
+            } else if($data['security_type'] == 'Email'){
+                $data['security_type'] = 1;
+            } else if($data['security_type'] == 'SMS'){
+                $data['security_type'] = 2;
             }
+
+            $user = User::create($data);
+            dispatch(new MailSender('EmailConfirmation', [
+                'email' => $data['email'],
+                'user_id' => $user->id
+            ]));
 
             if (isset($token)) {
                 $invitation->confirm();

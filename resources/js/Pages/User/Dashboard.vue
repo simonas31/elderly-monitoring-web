@@ -16,6 +16,55 @@ const showVideoModal = ref(false);
 const showDeviceNameChangeModal = ref(false);
 const videoUrl = ref(null);
 const videoName = ref(null);
+const activeChart = ref(1);
+const daysInMonth = ref(28);
+
+const customStyle = {
+    'position': 'relative',
+    'width': '100%',
+    'height': '400px'
+}
+
+const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: true
+}
+
+const chartDataHours = {
+  labels: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
+  datasets: [{
+    label: '# of Activities Captured',
+    data: props.logs.hours,
+    backgroundColor: [
+      'green'
+    ],
+    borderWidth: 1
+  }]
+};
+
+const chartDataDays = {
+  labels: [...Array.from(daysInMonth.value).keys()].map(i => i + 1),
+  datasets: [{
+    label: '# of Activities Captured',
+    data: props.logs.days,
+    backgroundColor: [
+      'red',
+    ],
+    borderWidth: 1
+  }]
+};
+
+const chartDataMonths = {
+  labels: ['January', 'February', 'March', 'April', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  datasets: [{
+    label: '# of Activities Captured',
+    data: props.logs.months,
+    backgroundColor: [
+      'blue',
+    ],
+    borderWidth: 1
+  }]
+};
 
 const toggleVideoModal = (url, name) => {
     showVideoModal.value = true;
@@ -60,7 +109,13 @@ onMounted(() => {
         changeDeviceNameForm.device_name = devicesList.value[0].value;
         changeDeviceNameForm.new_device_name = devicesList.value[0].label;
     }
+
+    daysInMonth.value = props.logs.days.length;
 });
+
+const switchChart = (chartId) => {
+    activeChart.value = chartId;
+};
 
 //watch changes of devices select
 </script>
@@ -106,6 +161,18 @@ onMounted(() => {
                         </div>
                         <div class="my-4 bg-white">
                             Activity Statistics
+                            <button @click="switchChart(1)">Chart 1</button>
+                            <button @click="switchChart(2)">Chart 2</button>
+                            <button @click="switchChart(3)">Chart 3</button>
+                            <div v-if="activeChart == 1">
+                                <Bar :data="chartDataHours" :style="customStyle" :options="chartOptions" />
+                            </div>
+                            <div v-else-if="activeChart == 2">
+                                <Bar :data="chartDataDays" :style="customStyle" />
+                            </div>
+                            <div v-else>
+                                <Bar :data="chartDataMonths" :style="customStyle" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,8 +221,12 @@ import Layout from '@Layouts/Layout.vue';
 import Modal from "@Components/Modal.vue";
 import Button from '@Components/Button.vue';
 import Input from '@Components/Input.vue';
+import { Bar } from 'vue-chartjs';
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
-    components: { Layout, Modal, Button, Input },
+    components: { Layout, Modal, Button, Input, Bar },
 }
 </script>

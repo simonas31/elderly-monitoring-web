@@ -45,11 +45,11 @@ class ActivityLog extends Model
             ->get();
 
         // Create an array to hold data for all hours of the day
-        $hourlyData = array_fill(0, 24, ['hour_of_day' => null, 'count' => 0]);
+        $hourlyData = array_fill(0, 24, 0);
 
         // Fill the array with retrieved data
         foreach ($activityLogs as $log) {
-            $hourlyData[$log->hour_of_day] = ['hour_of_day' => $log->hour_of_day, 'count' => $log->count];
+            $hourlyData[$log->hour_of_day] = $log->count;
         }
 
         return $hourlyData;
@@ -74,11 +74,11 @@ class ActivityLog extends Model
             ->get();
 
         // Create an array to hold data for all days of the month
-        $dailyData = array_fill(1, $daysInMonth, ['day_of_month' => null, 'count' => 0]);
+        $dailyData = array_fill(1, $daysInMonth, 0);
 
         // Fill the array with retrieved data
         foreach ($activityLogs as $log) {
-            $dailyData[$log->day_of_month] = ['day_of_month' => $log->day_of_month, 'count' => $log->count];
+            $dailyData[$log->day_of_month] = $log->count;
         }
 
         return $dailyData;
@@ -98,11 +98,11 @@ class ActivityLog extends Model
             ->get();
 
         // Create an array to hold data for all 12 months
-        $monthlyData = array_fill(1, 12, ['month_number' => null, 'count' => 0]);
+        $monthlyData = array_fill(1, 12, 0);
 
         // Fill the array with retrieved data
         foreach ($activityLogs as $log) {
-            $monthlyData[$log->month_number] = ['month_number' => $log->month_number, 'count' => $log->count];
+            $monthlyData[$log->month_number] = $log->count;
         }
 
         // Reindex the array to start from 0

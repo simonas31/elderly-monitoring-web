@@ -341,8 +341,6 @@ onMounted(() => {
                                         <span v-if="step1Errors.date_of_birth.value"
                                               class="text-rose-600">{{ step1Errors.date_of_birth.value }}</span>
                                     </div>
-                                    labas
-                                    {{ form.name }}
                                     <div class="relative">
                                         <Select id="role_id"
                                                 name="role_id"
