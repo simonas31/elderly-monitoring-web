@@ -98,13 +98,14 @@ class ActivityLog extends Model
             ->get();
 
         // Create an array to hold data for all 12 months
+        $months = [1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April', 5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August', 9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'];
         $monthlyData = array_fill(1, 12, 0);
-
         // Fill the array with retrieved data
         foreach ($activityLogs as $log) {
             $monthlyData[$log->month_number] = $log->count;
         }
 
+        $monthlyData = array_combine($months, $monthlyData);
         // Reindex the array to start from 0
         // $monthlyData = array_values($monthlyData);
 

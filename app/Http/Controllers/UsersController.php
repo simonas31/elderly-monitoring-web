@@ -69,8 +69,17 @@ class UsersController extends Controller
                 ->orWhere('user_id', '=', $user->parent_user_id);
         })->get()->toArray();
 
+        $logs = [
+            'hours' => [],
+            'days' => [],
+            'months' => []
+        ];
+
         if (empty($devices)) {
-            return Inertia::render('User/Dashboard');
+            return Inertia::render('User/Dashboard', [
+                'logs' => $logs,
+                'devices' => []
+            ]);
         }
 
 
@@ -80,11 +89,6 @@ class UsersController extends Controller
             $videos = $this->getVideosFromBucket($data['device_name']);
             $deviceTemp = Device::where('device_name', '=', $data['device_name'])->first();
 
-            $logs = [
-                'hours' => [],
-                'days' => [],
-                'months' => []
-            ];
             if (isset($deviceTemp)) {
                 $logs['hours'] = ActivityLog::getActivityLogsGroupedByHour($deviceTemp->id);
                 $logs['days'] = ActivityLog::getActivityLogsGroupedByDay($deviceTemp->id);
