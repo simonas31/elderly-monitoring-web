@@ -51,7 +51,8 @@ const logout = () => {
                 </div>
                 <!-- Slidedown body -->
                 <div class="flex items-center justify-center h-3/4">
-                    <div class="p-5 text-center flex flex-col space-y-4">
+                    <div class="p-5 text-center flex flex-col space-y-4"
+                         v-if="props.user">
                         <div>
                             <Link href="/dashboard">
                             Dashboard
@@ -68,7 +69,7 @@ const logout = () => {
                             </Link>
                         </div>
                         <div>
-                            <Link href="/supervisors">
+                            <Link :href="props.user.role_id == 1 ? '/users' : '/supervisors'">
                             {{ props.user.role_id == 1 ? "Users" : "Supervisors" }}
                             </Link>
                         </div>
@@ -79,6 +80,16 @@ const logout = () => {
                         </div>
                         <button @click="logout"
                                 class="border rounded-xl px-3 py-1 login-btn-bg-gradient text-md">Logout</button>
+                    </div>
+                    <div v-else
+                         class="p-5 text-center flex flex-col space-y-4">
+                        <div>
+                            <button class="border rounded-xl px-3 py-1 login-btn-bg-gradient text-md">
+                                <Link href="/login">
+                                Login
+                                </Link>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

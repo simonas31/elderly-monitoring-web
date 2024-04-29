@@ -8,9 +8,9 @@
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation">
                             <tr>
                                 <td>
-                                    <a href="{{ $url }}" class="button"
-                                        style="background-color: {{ $color }}; padding: 8px" target="_blank"
-                                        rel="noopener">{{ $slot }}</a>
+                                    <a href="{{ $url }}"
+                                        style="background-color: rgb(184,220,137); color: black; text-decoration: none; padding: 8px"
+                                        target="_blank" rel="noopener">{{ $slot }}</a>
                                 </td>
                             </tr>
                         </table>

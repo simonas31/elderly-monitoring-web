@@ -26,37 +26,43 @@ const deleteUser = (supervisor_id) => {
                         <div class="text-base sm:text-xl text-center header-border-bottom pb-3">
                             {{ auth.user.role_id == 1 ? "System Users" : 'Elder supervisors' }}
                         </div>
-                        <div class="flex justify-center pt-5">
-                            <table class="table-auto">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th class="px-2 sm:pr-10">Full Name</th>
-                                        <th class="px-2 sm:pr-10">Phone number</th>
-                                        <th v-if="page.props.auth.user.role_id == 1">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="supervisor in props.supervisors"
-                                        class="py-2">
-                                        <td>
-                                            <img class="rounded-full scale-100 object-cover w-9 h-9"
-                                                 :src="supervisor.profile_picture ? supervisor.profile_picture : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'">
-                                        </td>
-                                        <td class="px-2 sm:pr-10 text-center">
-                                            {{ supervisor.name + " " + supervisor.surname }}
-                                        </td>
-                                        <td class="text-center px-2 sm:pr-10">{{ supervisor.phone_number }}</td>
-                                        <td
-                                            v-show="page.props.auth.user.role_id == 1 && page.props.auth.user.id != supervisor.id">
-                                            <Button customClasses="sm:min-h-[40px] px-4 bg-rose-400 font-bold hover:bg-rose-600"
-                                                    @click="deleteUser(supervisor.id)">
-                                                DELETE
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="flex justify-center pt-5 lg:mx-5">
+                            <div class="bg-white shadow-lg">
+                                <table class="w-full table-fixed">
+                                    <thead class="bg-primary-300 border-gray-200">
+                                        <tr>
+                                            <th class="p-3 text-md font-semibold tracking-wide text-left">Full Name</th>
+                                            <th class="p-3 text-md font-semibold tracking-wide text-left">Phone number
+                                            </th>
+                                            <th v-if="page.props.auth.user.role_id == 1">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="supervisor in props.supervisors"
+                                            class="py-2 hover:bg-primary-100">
+                                            <td
+                                                class="p-3 text-md text-gray-700 text-ellipsis overflow-hidden text-left flex items-center justify-start">
+                                                <img class="rounded-full scale-100 object-cover w-9 h-9"
+                                                     :src="supervisor.profile_picture ? supervisor.profile_picture : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'">
+                                                <p class="pl-2">
+                                                    {{ supervisor.name + " " + supervisor.surname }}
+                                                </p>
+                                            </td>
+                                            <td
+                                                class="p-3 text-md text-gray-700 text-ellipsis overflow-hidden text-left">
+                                                {{ supervisor.phone_number }}</td>
+                                            <td class="p-3 text-md text-gray-700 text-ellipsis overflow-hidden text-center"
+                                                v-if="page.props.auth.user.role_id == 1 && page.props.auth.user.id != supervisor.id">
+                                                <Button customClasses="sm:min-h-[40px] px-4 bg-rose-400 font-bold hover:bg-rose-600"
+                                                        @click="deleteUser(supervisor.id)">
+                                                    DELETE
+                                                </Button>
+                                            </td>
+                                            <td v-else></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

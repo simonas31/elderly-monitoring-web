@@ -69,7 +69,7 @@ function toggleDropdown() {
                     </Link>
                 </div>
                 <div>
-                    <Link href="/supervisors">
+                    <Link :href="props.auth.user.role_id == 1 ? '/users' : '/supervisors'">
                     {{ props.auth.user.role_id == 1 ? "Users" : "Supervisors" }}
                     </Link>
                 </div>
@@ -85,10 +85,12 @@ function toggleDropdown() {
         </div>
         <div class="hidden sm:flex space-x-2 mx-auto items-center rounded-full hover:cursor-pointer"
              v-if="!props.auth.user">
-            <Button intent="primary"
-                    customClasses="sm:min-h-[40px] px-4 rounded-full">
-                <Link href="/dashboard">Login</Link>
+            <Link href="/login">
+            <Button intent="greenish"
+                    customClasses="uppercase sm:min-h-[32px] sm:px-6 rounded bg-primary-200">
+                Login
             </Button>
+            </Link>
         </div>
         <div class="mx-auto pl-14 sm:hidden"
              :class="{ shake: disabled }">

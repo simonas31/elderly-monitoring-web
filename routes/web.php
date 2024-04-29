@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DevicesController;
 use App\Http\Controllers\UsersController;
+use App\Jobs\MailSender;
 use App\Mail\EmailConfirmationMail;
 use App\Mail\InvitationMail;
 use App\Models\User;
@@ -25,6 +26,17 @@ use Inertia\Inertia;
 /**
  * Unauthenticated routes
  */
+Route::get('/send', function () {
+    dispatch(new MailSender('Invitation', [
+        'email' => "babarskas.simonas@gmail.com",
+        'invited_user_name' => "Petras",
+        'invited_user_surname' => "Petraitis",
+        'invited_user_role_id' => 1,
+        'user_id' => 1,
+        'full_name' => "Testas" . " " . "Testauskas"
+    ]));
+});
+
 Route::get('/confirm/{token}', [UsersController::class, 'confirmEmail'])->name('confirmEmail');
 Route::group(['middleware' => ['guest']], function () {
     Route::get('/', [UsersController::class, 'index'])->name('index');
@@ -44,6 +56,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/settings', [UsersController::class, 'settings'])->name('settings');
     Route::get('/invite', [UsersController::class, 'invite'])->name('invite');
     Route::get('/supervisors', [UsersController::class, 'supervisors'])->name('supervisors');
+    Route::get('/users', [UsersController::class, 'users'])->name('users');
     Route::post('/dashboard', [UsersController::class, 'dashboard'])->name('findDevice');
     Route::get('/devices', [DevicesController::class, 'devices'])->name('devices');
 

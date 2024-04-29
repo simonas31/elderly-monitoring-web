@@ -23,11 +23,11 @@ const inputClass = computed(() => {
     return cva("", {
         variants: {
             type: {
-                text: "pl-2 peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 focus:outline-none focus:border-primary-600",
-                password: "pl-2 peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 focus:outline-none focus:border-primary-600",
+                text: "pl-2 peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 focus:outline-none focus:border-primary-600 shadow-lg",
+                password: "pl-2 peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 focus:outline-none focus:border-primary-600 shadow-lg",
                 file: "",
                 number: "",
-                date: "p-2 peer h-10 w-full border-b-2 border-gray-300 focus:outline-none focus:border-primary-600",
+                date: "p-2 peer h-10 w-full border-b-2 border-gray-300 focus:outline-none focus:border-primary-600 shadow-lg",
             }
         }
     })({

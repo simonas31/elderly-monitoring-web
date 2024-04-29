@@ -30,7 +30,7 @@ class UsersController extends Controller
     public function getVideosFromBucket($device_name)
     {
         //pass custom parameters to page
-        if(empty(env('GCS_CREDENTIALS'))){
+        if (empty(env('GCS_CREDENTIALS'))) {
             return [];
         }
 
@@ -284,9 +284,9 @@ class UsersController extends Controller
                 $data['profile_picture'] = "data:$content_type;base64," . base64_encode(file_get_contents($request->file('profile_picture')));
             }
 
-            if($data['role_id'] == 'Relative'){
+            if ($data['role_id'] == 'Relative') {
                 $data['role_id'] = 2;
-            } else if($data['role_id'] == 'Caregiver') {
+            } else if ($data['role_id'] == 'Caregiver') {
                 $data['role_id'] = 3;
             }
 
@@ -301,11 +301,11 @@ class UsersController extends Controller
                 ]);
             }
 
-            if($data['security_type'] == 'None'){
+            if ($data['security_type'] == 'None') {
                 $data['security_type'] = 0;
-            } else if($data['security_type'] == 'Email'){
+            } else if ($data['security_type'] == 'Email') {
                 $data['security_type'] = 1;
-            } else if($data['security_type'] == 'SMS'){
+            } else if ($data['security_type'] == 'SMS') {
                 $data['security_type'] = 2;
             }
 
@@ -607,5 +607,14 @@ class UsersController extends Controller
         $encryptedData = $request->input('encryptedData');
         $decryptedData = Crypt::decrypt($encryptedData);
         return response()->json(['decryptedData' => $decryptedData]);
+    }
+
+    public function users(Request $request)
+    {
+        $group = DB::table('users')->get()->toArray();
+
+        return Inertia::render('User/Supervisors', [
+            'supervisors' => $group
+        ]);
     }
 }

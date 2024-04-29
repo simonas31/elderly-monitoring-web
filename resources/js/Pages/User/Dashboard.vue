@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useForm, router } from '@inertiajs/vue3'
+import { VideoCameraIcon } from "@heroicons/vue/16/solid";
 
 const props = defineProps(['videos', 'devices', 'selectedDevice', 'logs']);
 
@@ -38,12 +39,10 @@ const chartOptions1 = {
                 text: 'Hours of the day'
             }
         },
+    },
+    y: {
+        beginAtZero: true
     }
-    // y: {
-    //     ticks: {
-    //         stepSize: 1
-    //     },
-    // },
 }
 
 const chartOptions2 = {
@@ -59,6 +58,9 @@ const chartOptions2 = {
                 text: 'Days'
             }
         },
+        y: {
+            beginAtZero: true
+        }
     }
 }
 
@@ -75,45 +77,48 @@ const chartOptions3 = {
                 text: 'Months'
             }
         },
+        y: {
+            beginAtZero: true
+        }
     }
 }
 
 const chartDataHours = {
-  labels: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
-  datasets: [{
-    label: '# of Activities Captured',
-    data: props.logs.hours,
-    backgroundColor: [
-      'green'
-    ],
-    borderWidth: 1
-  }]
+    labels: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
+    datasets: [{
+        label: '# of Activities Captured',
+        data: props.logs.hours,
+        backgroundColor: [
+            'green'
+        ],
+        borderWidth: 1
+    }]
 };
 
 const chartDataDays = {
-  labels: [...Array.from(daysInMonth.value).keys()].map(i => i + 1),
-  datasets: [{
-    label: '# of Activities Captured',
-    data: props.logs.days,
-    backgroundColor: [
-      'red',
-    ],
-    borderWidth: 1
-  }]
+    labels: [...Array.from(daysInMonth.value).keys()].map(i => i + 1),
+    datasets: [{
+        label: '# of Activities Captured',
+        data: props.logs.days,
+        backgroundColor: [
+            'red',
+        ],
+        borderWidth: 1
+    }]
 };
 
 const chartDataMonths = {
-  labels: months,
-  datasets: [{
-    label: '# of Activities Captured',
-    data: props.logs.months,
-    backgroundColor: [
-      'blue',
-    ],
-    borderWidth: 1
-  }]
+    labels: months,
+    datasets: [{
+        label: '# of Activities Captured',
+        data: props.logs.months,
+        backgroundColor: [
+            'blue',
+        ],
+        borderWidth: 1
+    }]
 };
-console.log(props.logs.months)
+
 const toggleVideoModal = (url, name) => {
     showVideoModal.value = true;
     videoName.value = name;
@@ -172,9 +177,11 @@ const switchChart = (chartId) => {
         <div class="my-12 mx-4 xl:mx-auto xl:w-4/5">
             <div class="bg-secondary-300/40 m-auto px-2 shadow-lg">
                 <div class="flex flex-col lg:flex-row text-black">
-                    <div class="container flex flex-col md:w-full my-4 pb-2 mx-auto justify-center text-sm sm:text-base">
+                    <div
+                         class="container flex flex-col md:w-full my-4 pb-2 mx-auto justify-center text-sm sm:text-base">
                         <div class="flex flex-col sm:flex-row items-center mx-auto">
-                            <div class="w-[300px] sm:mr-2">
+                            <div
+                                 class="w-auto h-[170px] mb-4 sm:mb-0 sm:h-[200px] sm:mr-2 bg-white rounded pt-[50px] px-3 shadow-lg">
                                 <div class="relative mb-4 mx-auto max-w-[300px]">
                                     <select id="devices"
                                             class="peer h-full w-full border-t-white focus:border-t-white border-2 border-gray-300 px-3 py-2.5 text-sm sm:text-base text-blue-gray-700 transition-all focus:border-2 focus:border-primary-600 focus:border-t-transparent focus:outline-0"
@@ -189,7 +196,7 @@ const switchChart = (chartId) => {
                                         </option>
                                     </select>
                                     <label
-                                            class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full text-[11px] leading-tight transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2 before:border-t-2 before:border-l-2 before:border-gray-300 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:border-t-2 after:border-r-2 after:border-gray-300 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-primary-600 peer-focus:after:border-t-2 peer-focus:after:border-primary-600 selectLabel">
+                                           class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full text-[11px] leading-tight transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2 before:border-t-2 before:border-l-2 before:border-gray-300 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:border-t-2 after:border-r-2 after:border-gray-300 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-primary-600 peer-focus:after:border-t-2 peer-focus:after:border-primary-600 selectLabel">
                                         Devices
                                     </label>
                                 </div>
@@ -200,34 +207,53 @@ const switchChart = (chartId) => {
                                     </Button>
                                 </div>
                             </div>
-                            <div class="max-h-[200px] min-h-[150px] w-[285px] overflow-auto bg-white rounded px-4 py-2">
+                            <div
+                                 class="max-h-[200px] min-h-[150px] w-auto sm:w-[285px] bg-white rounded px-4 py-2 shadow-lg">
                                 <p class="pl-2 pb-1 text-center">Device Captured Videos</p>
                                 <hr class="h-px my-2 bg-gray-300 border-0">
-                                <div v-if="props.videos.length != 0" v-for="video in props.videos"
-                                        class=""
-                                        @click="toggleVideoModal(video.url, video.name)">
-                                    <p class="hover:text-blue-400 hover:cursor-pointer">{{ video.name }}</p>
-                                </div>
-                                <div v-else class="text-center pt-4">
-                                    <p class="font-bold">No video captured</p>
+                                <div class="max-h-[140px] overflow-auto">
+                                    <div v-if="props.videos.length != 0"
+                                         v-for="video in props.videos"
+                                         class="flex flex-row space-x-2 justify-center hover:bg-primary-300 hover:cursor-pointer hover:font-bold pl-4 pr-6 sm:px-0"
+                                         @click="toggleVideoModal(video.url, video.name)">
+                                        <VideoCameraIcon class="w-[20px] hover:bg-primary-400"></VideoCameraIcon>
+                                        <p>{{ video.name }}</p>
+                                    </div>
+                                    <div v-else
+                                         class="text-center pt-4">
+                                        <p class="font-bold">No video captured</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="md:mx-auto my-4 bg-white text-center rounded-lg justify-center">
+                        <div
+                             class="lg:mx-auto md:pl-8 md:pr-10 my-4 bg-white text-center rounded-lg justify-center shadow-lg">
                             <p>Activity Statistics</p>
                             <div class="space-x-2 my-3 space-y-2">
-                                <Button intent="primary" @click="switchChart(1)">Today's statistics</Button>
-                                <Button intent="primary" @click="switchChart(2)">Days's statistics</Button>
-                                <Button intent="primary" @click="switchChart(3)">Month's statistics</Button>
+                                <Button intent="primary"
+                                        @click="switchChart(1)">Today's statistics</Button>
+                                <Button intent="primary"
+                                        @click="switchChart(2)">Days's statistics</Button>
+                                <Button intent="primary"
+                                        @click="switchChart(3)">Month's statistics</Button>
                             </div>
                             <div v-if="activeChart == 1">
-                                <Bar :data="chartDataHours" :style="customStyle" :options="chartOptions1" class="mx-auto" />
+                                <Bar :data="chartDataHours"
+                                     :style="customStyle"
+                                     :options="chartOptions1"
+                                     class="w-fit" />
                             </div>
                             <div v-else-if="activeChart == 2">
-                                <Bar :data="chartDataDays" :style="customStyle" :options="chartOptions2" class="mx-auto" />
+                                <Bar :data="chartDataDays"
+                                     :style="customStyle"
+                                     :options="chartOptions2"
+                                     class="w-fit" />
                             </div>
                             <div v-else>
-                                <Bar :data="chartDataMonths" :style="customStyle" :options="chartOptions3" class="mx-auto" />
+                                <Bar :data="chartDataMonths"
+                                     :style="customStyle"
+                                     :options="chartOptions3"
+                                     class="w-fit" />
                             </div>
                         </div>
                     </div>

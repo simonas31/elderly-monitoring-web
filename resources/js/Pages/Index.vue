@@ -14,8 +14,32 @@ const login = async () => {
 </script>
 <template>
     <Layout>
-        <div class="my-12 mx-4 xl:mx-auto xl:w-4/5">
-            intro
+        <div class="my-12 container mx-auto">
+            <div class="flex flex-col md:flex-row justify-center">
+                <div class="max-w-[400px]">
+                    <h3 class="text-primary-500 pt-5">Elder Watch</h3>
+                    <br>
+                    <p class="text-center md:text-left">
+                        Elder Watch - system built for taking care of elders.
+                    </p>
+                    <p class="pt-2">
+                        Watching over them and getting notification if incident happens.
+                    </p>
+                    <br>
+                    <Link href="/login">
+                    <Button intent="greenish"
+                            customClasses="uppercase sm:min-h-[32px] sm:px-6 rounded bg-primary-200">
+                        Login
+                    </Button>
+                    </Link>
+                </div>
+
+                <div class="max-w-[500px] mx-auto md:mx-1">
+                    <img class="bg-no-repeat bg-cover bg-center rounded-md"
+                         src="../../../storage/images/index-image.png"
+                         alt="img">
+                </div>
+            </div>
         </div>
     </Layout>
 </template>

@@ -261,9 +261,9 @@ const prefilled = ref(false);
 onMounted(() => {
     showTab(currentStep.value);
 
-    if (window.location.href.split('/register?')[1] != undefined) {
+    if (window.location.href.split('/register/')[1] != undefined) {
         axios.post('/api/decrypt', {
-            encryptedData: window.location.href.split('/register?')[1]
+            encryptedData: window.location.href.split('/register/')[1]
         })
             .then(response => {
                 const decryptedData = response.data.decryptedData;
@@ -298,10 +298,10 @@ onMounted(() => {
                                      mode="out-in">
                         <div :key="'step1'"
                              v-if="currentStep == 0"
-                             class="step flex flex-col lg:flex-row mt-10 mb-6 sm:mx-5">
+                             class="step flex flex-col lg:flex-row mt-10 mb-6 mx-5">
                             <div class="w-full lg:w-1/2">
-                                <img class="bg-no-repeat bg-cover bg-center"
-                                     src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
+                                <img class="bg-no-repeat bg-cover bg-center rounded-md"
+                                     src="../../../../storage/images/register_page.png"
                                      alt="img">
                             </div>
 
@@ -421,8 +421,8 @@ onMounted(() => {
                              v-if="currentStep == 1"
                              class="step flex flex-col lg:flex-row mt-10 mb-6 sm:mx-5">
                             <div class="w-full lg:w-1/2">
-                                <img class="bg-no-repeat bg-cover bg-center"
-                                     src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
+                                <img class="bg-no-repeat bg-cover bg-center rounded-md"
+                                     src="../../../../storage/images/register_page.png"
                                      alt="img">
                             </div>
 
@@ -470,8 +470,8 @@ onMounted(() => {
                              v-if="currentStep == 2"
                              class="step flex flex-col lg:flex-row mt-10 mb-6 sm:mx-5">
                             <div class="w-full lg:w-1/2">
-                                <img class="bg-no-repeat bg-cover bg-center"
-                                     src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
+                                <img class="bg-no-repeat bg-cover bg-center rounded-md"
+                                     src="../../../../storage/images/register_page.png"
                                      alt="img">
                             </div>
 

@@ -58,7 +58,7 @@ const invite = () => {
                 <div class="flex flex-col lg:flex-row text-black">
                     <div class="container my-4 pb-2 mx-auto text-sm sm:text-base">
                         <div class="text-base sm:text-xl text-center header-border-bottom pb-3">
-                            Invite another person to look after of elder
+                            Invite another person to look after elder
                         </div>
                         <div class="flex flex-col justify-center items-center w-full">
                             <div class="relative mt-10 w-[250px] sm:w-[300px]">
