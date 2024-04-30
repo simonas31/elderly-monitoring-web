@@ -1,11 +1,13 @@
 <script setup>
-import { Link, useForm } from "@inertiajs/vue3";
+import { router, useForm } from "@inertiajs/vue3";
 import { ref, watch, onMounted } from "vue";
 import { ArrowLongRightIcon, ArrowLongLeftIcon } from "@heroicons/vue/20/solid";
 
+const roles = ['Relative', 'Caregiver'];
+
 const form = useForm({
-    first_name: ref(null),
-    last_name: ref(null),
+    name: ref(null),
+    surname: ref(null),
     password: ref(null),
     confirm_password: ref(null),
     email: ref(null),
@@ -13,12 +15,15 @@ const form = useForm({
     phone_number: ref(null),
     profile_picture: ref(null),
     security_type: ref(null),
+    parent_user_id: ref(null), // add user_id from invite request token
+    role_id: ref(null),
 });
 
 const step1Errors = {
-    first_name: ref(null),
-    last_name: ref(null),
+    name: ref(null),
+    surname: ref(null),
     date_of_birth: ref(null),
+    role_id: ref(null),
 };
 
 const step2Errors = {
@@ -48,11 +53,16 @@ const currentStep = ref(0);
 const requirementsMet = ref(false);
 
 const register = async (e) => {
+    e.preventDefault();
     if (!validateForm()) {
         return false;
     }
 
-    form.post('/register', {
+    let query = '';
+    if (window.location.href.split('/register?')[1] != undefined) {
+        query = '?' + window.location.href.split('/register?')[1];
+    }
+    form.post('/register' + query, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
@@ -172,8 +182,13 @@ function validateForm() {
 
     let select = x[currentTab].getElementsByTagName("select");
     let selectLabel = x[currentTab].getElementsByClassName("selectLabel");
-    if (select.length > 0 && form.security_type == null) {
+    if (select.length > 0 && form.security_type == null && currentStep.value == 2) {
         errors[currentStep.value][select[0].name].value = "Security type is required";
+        valid = false;
+        selectLabel[0].classList.add("before:border-rose-300", "after:border-rose-300");
+        select[0].classList.add("border-rose-300");
+    } else if (select.length > 0 && form.role_id == null && currentStep.value == 0) {
+        errors[currentStep.value][select[0].name].value = "Position is required";
         valid = false;
         selectLabel[0].classList.add("before:border-rose-300", "after:border-rose-300");
         select[0].classList.add("border-rose-300");
@@ -241,8 +256,27 @@ function fixStepIndicator(n) {
     x[n].className += " active";
 }
 
+const prefilled = ref(false);
+
 onMounted(() => {
     showTab(currentStep.value);
+
+    if (window.location.href.split('/register/')[1] != undefined) {
+        axios.post('/api/decrypt', {
+            encryptedData: window.location.href.split('/register/')[1]
+        })
+            .then(response => {
+                const decryptedData = response.data.decryptedData;
+                prefilled.value = true;
+                form.email = decryptedData.email;
+                form.role_id = decryptedData.invited_user_role_id;
+                form.name = decryptedData.invited_user_name;
+                form.surname = decryptedData.invited_user_surname;
+            })
+            .catch(error => {
+                // router.visit('/');
+            });
+    }
 })
 
 </script>
@@ -264,10 +298,10 @@ onMounted(() => {
                                      mode="out-in">
                         <div :key="'step1'"
                              v-if="currentStep == 0"
-                             class="step flex flex-col lg:flex-row mt-10 mb-6 sm:mx-5">
+                             class="step flex flex-col lg:flex-row mt-10 mb-6 mx-5">
                             <div class="w-full lg:w-1/2">
-                                <img class="bg-no-repeat bg-cover bg-center"
-                                     src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
+                                <img class="bg-no-repeat bg-cover bg-center rounded-md"
+                                     src="../../../../storage/images/register_page.png"
                                      alt="img">
                             </div>
 
@@ -276,23 +310,25 @@ onMounted(() => {
                                 <div class="flex flex-col mx-auto space-y-6 w-4/5">
                                     <div class="relative">
                                         <Input autocomplete="off"
-                                               id="first_name"
-                                               name="first_name"
+                                               id="name"
+                                               name="name"
                                                type="text"
                                                placeholder="First Name"
-                                               v-model="form.firstname" />
-                                        <span v-if="step1Errors.first_name.value"
-                                              class="text-rose-600">{{ step1Errors.first_name.value }}</span>
+                                               v-model="form.name"
+                                               :customClasses="prefilled ? 'disabled pointer-events-none' : ''" />
+                                        <span v-if="step1Errors.name.value"
+                                              class="text-rose-600">{{ step1Errors.name.value }}</span>
                                     </div>
                                     <div class="relative">
                                         <Input autocomplete="off"
-                                               id="last_name"
-                                               name="last_name"
+                                               id="surname"
+                                               name="surname"
                                                type="text"
                                                placeholder="Last Name"
-                                               v-model="form.lastname" />
-                                        <span v-if="step1Errors.last_name.value"
-                                              class="text-rose-600">{{ step1Errors.last_name.value }}</span>
+                                               v-model="form.surname"
+                                               :customClasses="prefilled ? 'disabled pointer-events-none' : ''" />
+                                        <span v-if="step1Errors.surname.value"
+                                              class="text-rose-600">{{ step1Errors.surname.value }}</span>
                                     </div>
 
                                     <div class="relative">
@@ -305,6 +341,16 @@ onMounted(() => {
                                         <span v-if="step1Errors.date_of_birth.value"
                                               class="text-rose-600">{{ step1Errors.date_of_birth.value }}</span>
                                     </div>
+                                    <div class="relative">
+                                        <Select id="role_id"
+                                                name="role_id"
+                                                placeholder="Position"
+                                                :options="roles"
+                                                v-model="form.role_id"
+                                                :customClasses="prefilled ? 'disabled pointer-events-none' : ''" />
+                                        <span v-if="step1Errors.role_id.value"
+                                              class="text-rose-600">{{ step1Errors.role_id.value }}</span>
+                                    </div>
 
                                     <div class="flex flex-col items-center justify-center w-full"
                                          @dragover.prevent="onDragOver"
@@ -312,7 +358,7 @@ onMounted(() => {
                                          @drop.prevent="onDrop">
                                         <span class="">Profile picture (optional)</span>
                                         <label for="dropzone-file"
-                                               class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                               class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white dark:hover:bg-bray-80 hover:bg-gray-100">
                                             <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                                 <svg v-if="!isDropping && !dropped"
                                                      class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
@@ -375,8 +421,8 @@ onMounted(() => {
                              v-if="currentStep == 1"
                              class="step flex flex-col lg:flex-row mt-10 mb-6 sm:mx-5">
                             <div class="w-full lg:w-1/2">
-                                <img class="bg-no-repeat bg-cover bg-center"
-                                     src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
+                                <img class="bg-no-repeat bg-cover bg-center rounded-md"
+                                     src="../../../../storage/images/register_page.png"
                                      alt="img">
                             </div>
 
@@ -389,6 +435,7 @@ onMounted(() => {
                                                name="email"
                                                type="text"
                                                placeholder="Email"
+                                               :customClasses="prefilled ? 'disabled pointer-events-none' : ''"
                                                v-model="form.email" />
                                         <span v-if="step2Errors.email.value"
                                               class="text-rose-600">{{ step2Errors.email.value }}</span>
@@ -423,8 +470,8 @@ onMounted(() => {
                              v-if="currentStep == 2"
                              class="step flex flex-col lg:flex-row mt-10 mb-6 sm:mx-5">
                             <div class="w-full lg:w-1/2">
-                                <img class="bg-no-repeat bg-cover bg-center"
-                                     src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg"
+                                <img class="bg-no-repeat bg-cover bg-center rounded-md"
+                                     src="../../../../storage/images/register_page.png"
                                      alt="img">
                             </div>
 

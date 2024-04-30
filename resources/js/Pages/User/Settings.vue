@@ -1,16 +1,18 @@
 <script setup>
 import { Link, useForm } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
-import { LockClosedIcon, BellAlertIcon } from "@heroicons/vue/20/solid";
+import { ref, watch, onMounted } from "vue";
+import { LockClosedIcon, BellAlertIcon, PhoneIcon } from "@heroicons/vue/20/solid";
 import { UserCircleIcon } from "@heroicons/vue/16/solid";
 
+const props = defineProps(['user', 'tab']);
+
 const passwordForm = useForm({
-    currentPassword: ref(null),
-    newPassword: ref(null),
+    current_password: ref(null),
+    new_password: ref(null),
 });
 
 const profileForm = useForm({
-    profilePicture: ref(null),
+    profile_picture: ref(null),
 });
 
 const securityForm = useForm({
@@ -19,7 +21,10 @@ const securityForm = useForm({
 
 const notificationsForm = useForm({
     fall_alert: ref(null),
-    risky_alerts: ref(null),
+});
+
+const phoneNumberForm = useForm({
+    phone_number: ref(null),
 });
 
 const isDropping = ref(false);
@@ -56,7 +61,7 @@ const toggleTab = (tab, e) => {
 const onFileChange = (e) => {
     const file = e.target.files[0];
     let imgUrl = URL.createObjectURL(file);
-    form.profile_picture = file;
+    profileForm.profile_picture = file;
     imageUrl.value = imgUrl;
 
     isDropping.value = false;
@@ -90,7 +95,7 @@ const onDrop = (e) => {
     dropped.value = true;
 }
 
-watch(() => passwordForm.newPassword, (newPassword) => {
+watch(() => passwordForm.new_password, (newPassword) => {
     requirementsMet.value = true;
     if (newPassword.length >= 8) {
         document.querySelector(".atleast").classList.remove("x-sign");
@@ -130,28 +135,35 @@ watch(() => passwordForm.newPassword, (newPassword) => {
 });
 
 const validatePassword = () => {
-    if (passwordForm.currentPassword == null) {
+    if (passwordForm.current_password == null) {
         passwordErrors.password.value = "Current password cannot be empty";
+        return;
     } else {
-        passwordErrors.password = null;
+        passwordErrors.password.value = null;
     }
 
     if (!requirementsMet.value) {
         passwordErrors.newPassword.value = "Password did not meet the requirements";
+        return;
     } else {
         passwordErrors.newPassword.value = null;
     }
 
-    if (passwordForm.newPassword != confirmPassword.value) {
+    if (passwordForm.new_password != confirmPassword.value) {
         passwordErrors.newPasswordConfirm.value = "Passwords are not equal";
+        return;
     } else {
         passwordErrors.newPasswordConfirm.value = null;
     }
     //post
-    // passwordForm.post('/changePassword');
+    passwordForm.post('/changePassword');
 };
 
 const changeProfilePicture = () => {
+    if (profileForm.profile_picture == null) {
+        console.log(null);
+        return;
+    }
     profileForm.post('/changeProfilePicture', {
         headers: {
             'Content-Type': 'multipart/form-data',
@@ -168,12 +180,27 @@ const updateSecurity = () => {
         return;
     }
 
-    //securityForm.post('/updateSecurity');
+    securityForm.post('/changeSecurityType');
 };
 
 const updateNotifications = () => {
-    notificationsForm.post('/updateNotifications');
+    notificationsForm.post('/toggleNotifications');
 };
+
+const updatePhoneNumber = () => {
+    phoneNumberForm.post('/changePhoneNumber');
+};
+
+onMounted(() => {
+    securityForm.security_type = props.user.security_type;
+    notificationsForm.fall_alert = props.user.fall_notifications;
+    phoneNumberForm.phone_number = props.user.phone_number;
+    // if (props.user.fall_notifications) {
+    //     var checkbox = document.getElementsByClassName("checkmark")[0];
+    //     checkbox.classList.add('checked');
+    //     console.log(checkbox);
+    // }
+});
 
 </script>
 <template>
@@ -206,7 +233,7 @@ const updateNotifications = () => {
                                     aria-selected="false"
                                     @click="toggleTab('privacy-settings', $event)">Privacy Settings</button>
                         </li>
-                        <li role="presentation">
+                        <!-- <li role="presentation">
                             <button class="inline-block p-4 border-b-2 hover:border-primary-500 hover:bg-primary-200"
                                     id="notifications-tab"
                                     data-tab-target="#notifications"
@@ -215,7 +242,7 @@ const updateNotifications = () => {
                                     aria-controls="notifications"
                                     aria-selected="false"
                                     @click="toggleTab('notifications', $event)">Notifications</button>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
                 <div id="default-tab-content text-sm sm:text-base"
@@ -224,63 +251,81 @@ const updateNotifications = () => {
                          id="profile"
                          role="tabpanel"
                          aria-labelledby="profile-tab">
-                        <div class="flex flex-col max-w-[500px] items-center mx-auto"
-                             @dragover.prevent="onDragOver"
-                             @dragleave.prevent="onDragLeave"
-                             @drop.prevent="onDrop">
-                            <span class="mb-5">Profile picture</span>
-                            <label for="dropzone-file"
-                                   class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <svg v-if="!isDropping && !dropped"
-                                         class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                                         aria-hidden="true"
-                                         xmlns="http://www.w3.org/2000/svg"
-                                         fill="none"
-                                         viewBox="0 0 20 16">
-                                        <path stroke="currentColor"
-                                              stroke-linecap="round"
-                                              stroke-linejoin="round"
-                                              stroke-width="2"
-                                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                    </svg>
-                                    <div class="my-auto">
-                                        <img v-if="imageUrl"
-                                             :src="imageUrl"
-                                             alt="Uploaded Image"
-                                             style="border: 1px solid #555; border-radius: 50%; width: 50px; height: 50px;" />
+                        <div class="flex flex-col sm:flex-row">
+                            <div class="flex flex-col w-[200px] sm:w-[400px] max-w-[500px] items-center mx-auto"
+                                 @dragover.prevent="onDragOver"
+                                 @dragleave.prevent="onDragLeave"
+                                 @drop.prevent="onDrop">
+                                <span class="mb-5">Profile picture</span>
+                                <label for="dropzone-file"
+                                       class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white dark:hover:bg-bray-800 hover:bg-gray-100">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <svg v-if="!isDropping && !dropped"
+                                             class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                                             aria-hidden="true"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             fill="none"
+                                             viewBox="0 0 20 16">
+                                            <path stroke="currentColor"
+                                                  stroke-linecap="round"
+                                                  stroke-linejoin="round"
+                                                  stroke-width="2"
+                                                  d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                        </svg>
+                                        <div class="my-auto">
+                                            <img v-if="imageUrl"
+                                                 :src="imageUrl"
+                                                 alt="Uploaded Image"
+                                                 style="border: 1px solid #555; border-radius: 50%; width: 50px; height: 50px;" />
+                                        </div>
+                                        <p v-if="!isDropping && !dropped"
+                                           class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                            <span class="font-semibold">Click to upload</span> or drag and drop
+                                        </p>
+                                        <p v-else-if="isDropping && !dropped"
+                                           class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                            <span class="font-semibold">Drop image.</span>
+                                        </p>
+                                        <p v-else-if="dropped"
+                                           class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                            <span class="font-semibold">Image uploaded successfully.</span>
+                                        </p>
+
+
+                                        <p v-if="!isDropping && !dropped"
+                                           class="text-xs text-gray-500 dark:text-gray-400">
+                                            PNG, JPG (MAX. 16MB)
+                                        </p>
                                     </div>
-                                    <p v-if="!isDropping && !dropped"
-                                       class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                        <span class="font-semibold">Click to upload</span> or drag and drop
-                                    </p>
-                                    <p v-else-if="isDropping && !dropped"
-                                       class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                        <span class="font-semibold">Drop image.</span>
-                                    </p>
-                                    <p v-else-if="dropped"
-                                       class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                        <span class="font-semibold">Image uploaded successfully.</span>
-                                    </p>
-
-
-                                    <p v-if="!isDropping && !dropped"
-                                       class="text-xs text-gray-500 dark:text-gray-400">
-                                        PNG, JPG (MAX. 16MB)
-                                    </p>
+                                    <input id="dropzone-file"
+                                           name="profile_picture"
+                                           type="file"
+                                           accept=".png, .jpg, .jpeg"
+                                           class="hidden"
+                                           @change="onFileChange" />
+                                </label>
+                                <Button intent="primary"
+                                        customClasses="sm:min-h-[40px] px-4 mt-4"
+                                        id="submit"
+                                        @click="changeProfilePicture"
+                                        :rightIcon="UserCircleIcon">Change Profile Picture</Button>
+                            </div>
+                            <div
+                                 class="flex flex-col w-[200px] sm:w-[400px] max-w-[500px] mt-[40px] sm:mt-[100px] items-center mx-auto">
+                                <div class="relative">
+                                    <Input autocomplete="off"
+                                           id="current_phone"
+                                           name="current_phone"
+                                           type="text"
+                                           placeholder="Current Phone Number"
+                                           v-model="phoneNumberForm.phone_number" />
                                 </div>
-                                <input id="dropzone-file"
-                                       name="profile_picture"
-                                       type="file"
-                                       accept=".png, .jpg, .jpeg"
-                                       class="hidden"
-                                       @change="onFileChange" />
-                            </label>
-                            <Button intent="primary"
-                                    customClasses="sm:min-h-[40px] px-4 mt-4"
-                                    id="submit"
-                                    @click="changeProfilePicture"
-                                    :rightIcon="UserCircleIcon">Change Profile Picture</Button>
+                                <Button intent="primary"
+                                        customClasses="sm:min-h-[40px] px-4 mt-4 mx-auto"
+                                        id="submit"
+                                        @click="updatePhoneNumber"
+                                        :rightIcon="PhoneIcon">Change Phone Number</Button>
+                            </div>
                         </div>
                     </div>
                     <div class="py-2 my-4 sm:p-4 sm:m-4 rounded-lg hidden"
@@ -294,7 +339,6 @@ const updateNotifications = () => {
                                             name="security_type"
                                             placeholder="Security Type"
                                             :options="['None', 'Email', 'SMS']"
-                                            :default="'None'"
                                             v-model="securityForm.security_type" />
                                     <span v-if="securityError"
                                           class="text-rose-600">{{ securityError }}</span>
@@ -313,7 +357,7 @@ const updateNotifications = () => {
                                            name="current_password"
                                            type="password"
                                            placeholder="Current Password"
-                                           v-model="passwordForm.currentPassword" />
+                                           v-model="passwordForm.current_password" />
                                     <span v-if="passwordErrors.password"
                                           class="text-rose-600">{{ passwordErrors.password.value }}</span>
                                 </div>
@@ -324,7 +368,7 @@ const updateNotifications = () => {
                                            name="new_password"
                                            type="password"
                                            placeholder="New Password"
-                                           v-model="passwordForm.newPassword" />
+                                           v-model="passwordForm.new_password" />
                                     <span v-if="passwordErrors.newPassword"
                                           class="text-rose-600">{{ passwordErrors.newPassword.value }}</span>
                                 </div>

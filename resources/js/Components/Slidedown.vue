@@ -6,6 +6,7 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+    user: Object
 });
 
 const emit = defineEmits(["closeSlidedown", "logout"]);
@@ -27,10 +28,10 @@ const logout = () => {
     </transition>
     <Transition name="sidebar">
         <div v-if="show"
-             class="fixed top-0 right-0 left-0 slidedown-h z-50 text-black">
+             class="fixed top-0 right-0 left-0 h-[400px] z-50 text-black">
             <div class="relative bg-white h-full">
                 <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
-                    <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Settings</h3>
+                    <h3 class="text-xl sm:text-xl font-semibold text-gray-900">Settings</h3>
                     <button type="button"
                             class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
                             @click="closeSlidedown">
@@ -50,13 +51,45 @@ const logout = () => {
                 </div>
                 <!-- Slidedown body -->
                 <div class="flex items-center justify-center h-3/4">
-                    <div class="p-5 text-center flex flex-col space-y-4">
-                        <div>action1</div>
-                        <div>action1</div>
-                        <div>action1</div>
-                        <div>action1</div>
+                    <div class="p-5 text-center flex flex-col space-y-4"
+                         v-if="props.user">
+                        <div>
+                            <Link href="/dashboard">
+                            Dashboard
+                            </Link>
+                        </div>
+                        <div v-if="props.user.role_id == 1">
+                            <Link href="/devices">
+                            Devices
+                            </Link>
+                        </div>
+                        <div v-if="props.user.parent_user_id == null">
+                            <Link href="/invite">
+                            Invite others
+                            </Link>
+                        </div>
+                        <div>
+                            <Link :href="props.user.role_id == 1 ? '/users' : '/supervisors'">
+                            {{ props.user.role_id == 1 ? "Users" : "Supervisors" }}
+                            </Link>
+                        </div>
+                        <div>
+                            <Link href="/settings">
+                            Settings
+                            </Link>
+                        </div>
                         <button @click="logout"
                                 class="border rounded-xl px-3 py-1 login-btn-bg-gradient text-md">Logout</button>
+                    </div>
+                    <div v-else
+                         class="p-5 text-center flex flex-col space-y-4">
+                        <div>
+                            <button class="border rounded-xl px-3 py-1 login-btn-bg-gradient text-md">
+                                <Link href="/login">
+                                Login
+                                </Link>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

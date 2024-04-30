@@ -1,5 +1,8 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, computed, watch } from "vue";
+import { usePage } from '@inertiajs/vue3'
+
+const page = usePage()
 
 const props = defineProps({
     auth: {
@@ -11,27 +14,22 @@ const props = defineProps({
         default: undefined,
     },
 });
-//used for default show alert message value
+
 const showAlert = ref(true);
 
-//used for watching show alert value change
-//if changed to false, then showAlert value should be true always, but remove flash message because it will no longer be needed
-watch(() => showAlert, (newShowAlert) => {
-    if (!newShowAlert.value) {
-        props.flash = null;
+watch(() => page.props, (newFlash) => {
+    if (newFlash && !showAlert.value) {
         showAlert.value = true;
     }
 });
-
-
 </script>
 <template>
     <div class="flex flex-col min-h-screen">
-        <Header></Header>
-        <Alert v-if="$page.props.flash"
+        <Header :auth="page.props.auth"></Header>
+        <Alert v-if="page.props.flash"
                :show="showAlert"
-               :intent="$page.props.flash.type"
-               :on-dismiss="() => (showAlert = false)">{{ $page.props.flash.message }}</Alert>
+               :intent="page.props.flash.type"
+               :on-dismiss="() => (showAlert = false)">{{ page.props.flash.message }}</Alert>
         <main class="flex-grow">
             <slot></slot>
         </main>

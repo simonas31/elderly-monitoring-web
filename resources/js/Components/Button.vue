@@ -13,7 +13,7 @@ const props = defineProps({
     intent: {
         type: String,
         validator(value) {
-            return ["primary", "secondary", "danger", "text"].includes(value);
+            return ["primary", "secondary", 'greenish', "danger", "text"].includes(value);
         },
         default: "secondary",
     },
@@ -24,11 +24,12 @@ const props = defineProps({
 });
 
 const buttonClass = computed(() => {
-    return cva("transition-all inline-flex items-center justify-center text-sm min-h-[32px] px-3 py-1 font-semibold", {
+    return cva("transition-all inline-flex items-center justify-center text-sm min-h-[32px] px-3 py-1 font-semibold rounded shadow-md", {
         variants: {
             intent: {
                 primary: "bg-khaki text-white",
                 secondary: "bg-black/5 hover:bg-black/10 text-gray-700",
+                greenish: "bg-primary-400 hover:bg-primary-500",
                 danger: "bg-red-600 text-white hover:bg-red-500",
                 text: "text-gray-700 hover:bg-black/5",
             },

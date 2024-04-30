@@ -18,3 +18,9 @@ yarn-error.log
 /.idea
 /.vscode
 /node_modules
+/html-coverage
+additional_config.tmp
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+/storage/credentials/

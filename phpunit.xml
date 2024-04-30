@@ -3,20 +3,42 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          colors="true"
+         stopOnFailure="false"
 >
     <testsuites>
-        <testsuite name="Unit">
-            <directory>tests/Unit</directory>
-        </testsuite>
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
         </testsuite>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
     </testsuites>
+
     <source>
         <include>
-            <directory>app</directory>
+            <directory suffix=".php">app</directory>
         </include>
+		<exclude>
+            <directory suffix=".php">./app/Macros</directory>
+			<directory suffix=".php">./app/Providers</directory>
+			<directory suffix=".php">./app/Http/Middleware</directory>
+			<directory suffix=".php">./app/Console</directory>
+			<directory suffix=".php">./app/Exceptions</directory>
+            <directory suffix=".php">./app/Events</directory>
+            <directory suffix=".php">./app/Notifications</directory>
+            <directory suffix=".php">./app/Mail</directory>
+            <directory suffix=".php">./app/Jobs</directory>
+			<file>./app/Http/Kernel.php</file>
+        </exclude>
     </source>
+
+    <coverage>
+        <report>
+            <html outputDirectory="html-coverage"/>
+        </report>
+    </coverage>
+
+
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
@@ -24,7 +46,6 @@
         <!-- <env name="DB_CONNECTION" value="sqlite"/> -->
         <!-- <env name="DB_DATABASE" value=":memory:"/> -->
         <env name="MAIL_MAILER" value="array"/>
-        <env name="PULSE_ENABLED" value="false"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>

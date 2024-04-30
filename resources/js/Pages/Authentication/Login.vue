@@ -1,14 +1,24 @@
 <script setup>
 import { Link, useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
+
+const twoFa = ref(false);
 
 const form = useForm({
-    email: null,
-    password: null,
-    remember: false,
+    email: ref(null),
+    password: ref(null),
+    remember: ref(false),
+    code: ref(null),
 });
 
 const login = async () => {
-    form.post("/login");
+    form.post("/login", {
+        onSuccess: (response) => {
+            if (response.props.twoFA) {
+                twoFa.value = true;
+            }
+        }
+    });
 };
 </script>
 <template>
@@ -32,7 +42,8 @@ const login = async () => {
                                                name="email"
                                                type="text"
                                                class="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-emerald-500"
-                                               placeholder="Email address" />
+                                               placeholder="Email address"
+                                               v-model="form.email" />
                                         <label for="email"
                                                class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email
                                             Address</label>
@@ -43,28 +54,27 @@ const login = async () => {
                                                name="password"
                                                type="password"
                                                class="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-emerald-500"
-                                               placeholder="Password" />
+                                               placeholder="Password"
+                                               v-model="form.password" />
                                         <label for="password"
                                                class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label>
                                     </div>
-                                    <div class="relative">
-                                        <div class="fill justify-between items-center mt-8 flex text-sm sm:text-base">
-                                            <div class="block">
-                                                <label for="rememberMe"
-                                                       class="checkbox-container">
-                                                    <input type="checkbox"
-                                                           id="rememberMe"
-                                                           name="rememberMe"
-                                                           v-model="form.remember" />
-                                                    <span class="checkmark"></span>
-                                                    <p>Remember me</p>
-                                                </label>
-                                            </div>
-                                            <Link href="/forgot-password">Forgot password?</Link>
-                                        </div>
+                                    <div v-if="twoFa"
+                                         class="relative">
+                                        <input autocomplete="off"
+                                               id="2fa"
+                                               name="2fa"
+                                               type="text"
+                                               class="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-emerald-500"
+                                               placeholder="Password"
+                                               v-model="form.code" />
+                                        <label for="2fa"
+                                               class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">2FA
+                                            code</label>
                                     </div>
                                     <div class="relative text-center pt-3">
                                         <Button intent="primary"
+                                                type="submit"
                                                 customClasses="uppercase sm:min-h-[48px] px-5 sm:px-8">
                                             Login
                                         </Button>
