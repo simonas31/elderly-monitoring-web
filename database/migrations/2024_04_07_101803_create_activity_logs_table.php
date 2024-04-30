@@ -16,8 +16,6 @@ return new class extends Migration
             $table->integer('device_id');
             $table->boolean('fell')->default(0);
             $table->timestamps();
-
-            $table->foreign('device_id')->references('id')->on('devices');
         });
     }
 

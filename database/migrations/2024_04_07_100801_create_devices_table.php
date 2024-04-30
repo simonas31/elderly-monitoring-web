@@ -19,8 +19,6 @@ return new class extends Migration
             $table->boolean('allowed')->default(1); // if allowed then user can get videos from this device
             $table->string('status');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
