@@ -29,8 +29,6 @@ return new class extends Migration
             $table->dateTime('two_factor_expires_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
-
-            $table->foreign('role_id')->references('id')->on('roles');
         });
     }
 
