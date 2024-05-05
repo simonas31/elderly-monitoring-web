@@ -73,7 +73,7 @@ const login = async () => {
                                             code</label>
                                     </div>
                                     <div class="relative text-center pt-3">
-                                        <Button intent="primary"
+                                        <Button intent="greenish"
                                                 type="submit"
                                                 customClasses="uppercase sm:min-h-[48px] px-5 sm:px-8">
                                             Login

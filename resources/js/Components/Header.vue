@@ -87,7 +87,7 @@ function toggleDropdown() {
              v-if="!props.auth.user">
             <Link href="/login">
             <Button intent="greenish"
-                    customClasses="uppercase sm:min-h-[32px] sm:px-6 rounded bg-primary-200">
+                    customClasses="uppercase sm:min-h-[32px] sm:px-6 rounded">
                 Login
             </Button>
             </Link>

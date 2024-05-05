@@ -299,7 +299,7 @@ onMounted(() => {
                         <div :key="'step1'"
                              v-if="currentStep == 0"
                              class="step flex flex-col lg:flex-row mt-10 mb-6 mx-5">
-                            <div class="w-full lg:w-1/2">
+                            <div class="w-full lg:w-1/2 lg:flex lg:items-center hidden">
                                 <img class="bg-no-repeat bg-cover bg-center rounded-md"
                                      src="../../../../storage/images/register_page.png"
                                      alt="img">
@@ -407,7 +407,7 @@ onMounted(() => {
                                     </div>
 
                                     <div class="ml-auto">
-                                        <Button intent="primary"
+                                        <Button intent="greenish"
                                                 :loading="loadingNext"
                                                 customClasses="sm:min-h-[40px] px-4 space-x-0 sm:space-x-3"
                                                 @click="nextPrev(1)"
@@ -453,11 +453,11 @@ onMounted(() => {
                                     </div>
 
                                     <div class="mx-auto w-full flex justify-between">
-                                        <Button intent="primary"
+                                        <Button intent="greenish"
                                                 customClasses="sm:min-h-[40px] px-4 space-x-0 sm:space-x-1"
                                                 @click="nextPrev(-1)"
                                                 :leftIcon="ArrowLongLeftIcon">Previous</Button>
-                                        <Button intent="primary"
+                                        <Button intent="greenish"
                                                 customClasses="sm:min-h-[40px] px-4 space-x-0 sm:space-x-3"
                                                 @click="nextPrev(1)"
                                                 :rightIcon="ArrowLongRightIcon">Continue</Button>
@@ -528,11 +528,11 @@ onMounted(() => {
                                         </div>
                                     </div>
                                     <div class="mx-auto flex w-full justify-between">
-                                        <Button intent="primary"
+                                        <Button intent="greenish"
                                                 customClasses="sm:min-h-[40px] px-4"
                                                 @click="nextPrev(-1)"
                                                 :leftIcon="ArrowLongLeftIcon">Previous</Button>
-                                        <Button intent="primary"
+                                        <Button intent="greenish"
                                                 customClasses="sm:min-h-[40px] px-4"
                                                 id="submit"
                                                 @click="register"

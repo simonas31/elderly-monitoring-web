@@ -205,7 +205,7 @@ onMounted(() => {
 </script>
 <template>
     <Layout>
-        <div class="my-12 mx-4 xl:mx-auto xl:w-4/5">
+        <div class="my-12 mx-4 xl:mx-auto xl:w-[850px]">
             <div class="flex flex-col auth-width bg-secondary-300/40 m-auto shadow-lg text-black">
                 <div class="my-4 pb-2 mx-auto text-sm sm:text-base">
                     <ul class="flex flex-wrap -mb-px text-center"
@@ -350,7 +350,7 @@ onMounted(() => {
                                         :rightIcon="LockClosedIcon">Update Security Type</Button>
                             </div>
                             <div
-                                 class="flex flex-col text-sm sm:text-base mx-5 sm:mx-auto space-y-6 sm:w-1/2 max-w-[500px]">
+                                 class="flex flex-col text-sm sm:text-base mx-5 sm:mx-auto space-y-6 sm:w-1/2">
                                 <div class="relative">
                                     <Input autocomplete="off"
                                            id="current_password"
@@ -384,21 +384,25 @@ onMounted(() => {
                                           class="text-rose-600">{{ passwordErrors.newPasswordConfirm.value }}</span>
                                 </div>
 
-                                <div class="mt-2 px-3 py-2 bg-primary-300 text-center">
-                                    <b>Password must contain:</b>
-                                    <div class="sm:ml-2">
-                                        <span class="x-sign atleast"></span>
-                                        <span class="ml-1">At least 8 characters</span>
-                                        <br />
-                                        <span class="x-sign upper"></span>
-                                        <span class="ml-1">One upper case letter (A-Z)</span>
-                                        <br />
-                                        <span class="x-sign lower"></span>
-                                        <span class="ml-1">One lower case letter (a-z)</span>
-                                        <br />
-                                        <span class="x-sign number"></span>
-                                        <span class="ml-1">One numeric character (0-9)</span>
-                                        <br />
+                                <div class="mt-2 px-3 py-2 bg-primary-300">
+                                    <p class="font-bold text-center">Password must contain:</p>
+                                    <div class="flex flex-col justify-center items-center text-left">
+                                        <div class="w-[182px] sm:w-[250px]">
+                                            <span class="x-sign atleast"></span>
+                                            <span class="ml-1">At least 8 characters</span>
+                                        </div>
+                                        <div class="w-[182px] sm:w-[250px]">
+                                            <span class="x-sign upper"></span>
+                                            <span class="ml-1">One upper case letter (A-Z)</span>
+                                        </div>
+                                        <div class="w-[182px] sm:w-[250px]">
+                                            <span class="x-sign lower"></span>
+                                            <span class="ml-1">One lower case letter (a-z)</span>
+                                        </div>
+                                        <div class="w-[182px] sm:w-[250px]">
+                                            <span class="x-sign number"></span>
+                                            <span class="ml-1">One numeric character (0-9)</span>
+                                        </div>
                                     </div>
                                 </div>
                                 <Button intent="primary"

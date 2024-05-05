@@ -174,13 +174,13 @@ const switchChart = (chartId) => {
 </script>
 <template>
     <Layout>
-        <div class="my-12 mx-4 xl:mx-auto xl:w-4/5">
+        <div class="my-12 mx-4 xl:mx-auto xl:w-[1100px]">
             <div class="bg-secondary-300/40 m-auto px-2 shadow-lg">
                 <div class="flex flex-col lg:flex-row text-black">
                     <div
                          class="container flex flex-col md:w-full my-4 pb-2 mx-auto justify-center text-sm sm:text-base">
                         <div class="flex flex-col sm:flex-row items-center mx-auto">
-                            <div
+                            <div v-if="devicesList.length > 0"
                                  class="w-auto h-[170px] mb-4 sm:mb-0 sm:h-[200px] sm:mr-2 bg-white rounded pt-[50px] px-3 shadow-lg">
                                 <div class="relative mb-4 mx-auto max-w-[300px]">
                                     <select id="devices"
@@ -207,12 +207,16 @@ const switchChart = (chartId) => {
                                     </Button>
                                 </div>
                             </div>
+                            <div v-else
+                                class="w-auto h-[170px] sm:h-[200px] sm:mr-2 bg-white rounded px-10 shadow-lg flex justify-center items-center">
+                                <p class="font-bold">No device registered</p>
+                            </div>
                             <div
                                  class="max-h-[200px] min-h-[150px] w-auto sm:w-[285px] bg-white rounded px-4 py-2 shadow-lg">
                                 <p class="pl-2 pb-1 text-center">Device Captured Videos</p>
                                 <hr class="h-px my-2 bg-gray-300 border-0">
                                 <div class="max-h-[140px] overflow-auto">
-                                    <div v-if="props.videos.length != 0"
+                                    <div v-if="props.videos"
                                          v-for="video in props.videos"
                                          class="flex flex-row space-x-2 justify-center hover:bg-primary-300 hover:cursor-pointer hover:font-bold pl-4 pr-6 sm:px-0"
                                          @click="toggleVideoModal(video.url, video.name)">
@@ -220,7 +224,7 @@ const switchChart = (chartId) => {
                                         <p>{{ video.name }}</p>
                                     </div>
                                     <div v-else
-                                         class="text-center pt-4">
+                                         class="text-center pt-4 max-h-[200px] min-h-[150px]">
                                         <p class="font-bold">No video captured</p>
                                     </div>
                                 </div>
