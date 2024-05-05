@@ -34,8 +34,10 @@ class UsersController extends Controller
             return [];
         }
 
+        $keyJson = json_decode(env('GCS_CREDENTIALS'), true);
+
         $storage = new StorageClient([
-            'keyFilePath' => storage_path('credentials/' . env('GCS_CREDENTIALS'))
+            'keyFile' => $keyJson
         ]);
 
         $bucket = $storage->bucket(env('GCS_BUCKET'));
