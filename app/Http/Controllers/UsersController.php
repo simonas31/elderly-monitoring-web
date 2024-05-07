@@ -60,7 +60,7 @@ class UsersController extends Controller
         foreach ($objectsArray as $object) {
             // Assuming you want to fetch all video files
             if (strpos($object->name(), '.mp4') !== false) {
-                $date = Carbon::parse($object->info()['timeCreated'])->format('Y-m-d H:i:s');
+                $date = Carbon::parse($object->info()['timeCreated'])->addHours(3)->format('Y-m-d H:i:s');
                 $videos[] = [
                     'name' => $date,
                     'url' => $object->signedUrl(time() + 3600), // Generating signed URL
