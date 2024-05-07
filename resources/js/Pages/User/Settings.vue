@@ -192,7 +192,14 @@ const updatePhoneNumber = () => {
 };
 
 onMounted(() => {
-    securityForm.security_type = props.user.security_type;
+    if(props.user.security_type == 0){
+        securityForm.security_type = 'None';
+    }else if(props.user.security_type == 1) {
+        securityForm.security_type = 'Email';
+    }else {
+        securityForm.security_type = 'SMS';
+    }
+    // securityForm.security_type = props.user.security_type;
     notificationsForm.fall_alert = props.user.fall_notifications;
     phoneNumberForm.phone_number = props.user.phone_number;
     // if (props.user.fall_notifications) {

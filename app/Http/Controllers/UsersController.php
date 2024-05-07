@@ -430,7 +430,16 @@ class UsersController extends Controller
     {
         $user = $request->user();
 
-        $user->security_type = $request->input('security_type');
+        $selected_security = $request->input('security_type');
+        $security_type = 'None';
+        if ($selected_security == 'None') {
+            $security_type = 0;
+        } else if ($selected_security == 'Email') {
+            $security_type = 1;
+        } else {
+            $security_type = 2;
+        }
+        $user->security_type = $security_type;
 
         if ($user->save()) {
             return redirect()->route('settings')->with('flash', [
