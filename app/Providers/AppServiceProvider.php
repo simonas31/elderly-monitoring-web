@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
+        date_default_timezone_set('Europe/Vilnius');
         Schema::defaultStringLength(191);
     }
 }
