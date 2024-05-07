@@ -20,6 +20,10 @@ const videoName = ref(null);
 const activeChart = ref(1);
 const daysInMonth = ref(28);
 
+const daysData = ref(props.logs.days);
+const hoursData = ref(props.logs.hours);
+const monthsData = ref(props.logs.months);
+
 const customStyle = {
     'position': 'relative',
     'width': 'auto',
@@ -83,41 +87,42 @@ const chartOptions3 = {
     }
 }
 
-const chartDataHours = {
+const chartDataHours = ref({
     labels: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
     datasets: [{
         label: '# of Activities Captured',
-        data: props.logs.hours,
+        data: hoursData.value,
         backgroundColor: [
             'green'
         ],
         borderWidth: 1
     }]
-};
+});
 
-const chartDataDays = {
+const chartDataDays = ref({
     labels: [...Array.from(daysInMonth.value).keys()].map(i => i + 1),
     datasets: [{
         label: '# of Activities Captured',
-        data: props.logs.days,
+        data: daysData.value,
         backgroundColor: [
             'red',
         ],
         borderWidth: 1
     }]
-};
+});
 
-const chartDataMonths = {
+const chartDataMonths = ref({
     labels: months,
     datasets: [{
         label: '# of Activities Captured',
-        data: props.logs.months,
+        data: monthsData.value,
         backgroundColor: [
             'blue',
         ],
         borderWidth: 1
     }]
-};
+});
+
 
 const toggleVideoModal = (url, name) => {
     showVideoModal.value = true;
@@ -126,7 +131,18 @@ const toggleVideoModal = (url, name) => {
 };
 
 const onDeviceChange = () => {
-    changeDeviceNameForm.post('/dashboard');
+    changeDeviceNameForm.post('/dashboard', {
+        onSuccess: (response) => {
+            chartDataDays.value.datasets[0].data = response.props.logs.days;
+            chartDataHours.value.datasets[0].data = response.props.logs.hours;
+            chartDataMonths.value.datasets[0].data = response.props.logs.months;
+            if(activeChart.value != 1){
+                activeChart.value = 1;
+            }else {
+                activeChart.value = 2;
+            }
+        }
+    });
 };
 
 const changeDeviceNameSubmit = () => {
