@@ -16,6 +16,16 @@ const deleteUser = (supervisor_id) => {
     form.post("/deleteUser");
 };
 
+const convertUserRole = (role_id) => {
+    if (role_id == 1) {
+        return "Admin";
+    } else if (role_id == 2) {
+        return "Relative";
+    } else if (role_id == 3) {
+        return "Nurse";
+    }
+}
+
 </script>
 <template>
     <Layout>
@@ -34,6 +44,7 @@ const deleteUser = (supervisor_id) => {
                                             <th class="p-3 text-md font-semibold tracking-wide text-left">Full Name</th>
                                             <th class="p-3 text-md font-semibold tracking-wide text-left">Phone number
                                             </th>
+                                            <th class="p-3 text-md font-semibold tracking-wide text-left">{{ page.props.auth.user.role_id == 1 ? 'Role' : "Elder's relationship" }}</th>
                                             <th v-if="page.props.auth.user.role_id == 1">Actions</th>
                                         </tr>
                                     </thead>
@@ -51,6 +62,9 @@ const deleteUser = (supervisor_id) => {
                                             <td
                                                 class="p-3 text-md text-gray-700 text-ellipsis overflow-hidden text-left">
                                                 {{ supervisor.phone_number }}</td>
+                                            <td class="p-3 text-md text-gray-700 text-ellipsis overflow-hidden text-left">
+                                                {{ convertUserRole(supervisor.role_id) }}
+                                            </td>
                                             <td class="p-3 text-md text-gray-700 text-ellipsis overflow-hidden text-center"
                                                 v-if="page.props.auth.user.role_id == 1 && page.props.auth.user.id != supervisor.id">
                                                 <Button customClasses="sm:min-h-[40px] px-4 bg-rose-400 font-bold hover:bg-rose-600"
@@ -58,7 +72,7 @@ const deleteUser = (supervisor_id) => {
                                                     DELETE
                                                 </Button>
                                             </td>
-                                            <td v-else></td>
+                                            <td v-else-if="page.props.auth.user.role_id == 1"></td>
                                         </tr>
                                     </tbody>
                                 </table>
