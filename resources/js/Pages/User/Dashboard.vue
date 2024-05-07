@@ -11,7 +11,7 @@ const changeDeviceNameForm = useForm({
 });
 
 const changeDeviceNameErorrs = ref(null);
-const months = ['January', 'February', 'March', 'April', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const devicesList = ref([]);
 const showVideoModal = ref(false);
 const showDeviceNameChangeModal = ref(false);
