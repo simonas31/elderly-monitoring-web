@@ -47,12 +47,22 @@ class UsersController extends Controller
             'prefix' => $device_name . '/videos/'
         ]);
 
-        foreach ($objects as $object) {
+        // Convert ObjectIterator<StorageObject> to an array for sorting
+        $objectsArray = iterator_to_array($objects);
+
+        // Sort the array of objects using the custom comparison function
+        usort($objectsArray, function ($a, $b) {
+            $timeA = strtotime($a->info()['timeCreated']);
+            $timeB = strtotime($b->info()['timeCreated']);
+            return $timeA < $timeB;
+        });
+
+        foreach ($objectsArray as $object) {
             // Assuming you want to fetch all video files
             if (strpos($object->name(), '.mp4') !== false) {
-                $filename = $this->formatFileName($object->name());
+                $date = Carbon::parse($object->info()['timeCreated'])->format('Y-m-d H:i:s');
                 $videos[] = [
-                    'name' => $filename,
+                    'name' => $date,
                     'url' => $object->signedUrl(time() + 3600), // Generating signed URL
                 ];
             }
